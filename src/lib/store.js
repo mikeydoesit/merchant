@@ -6,4 +6,5 @@ export const show_settings_menu = writable(false);
 export const show_campaigns_menu = writable(false);
 export const show_active_campaigns = writable(false);
 export const show_draft_campaigns = writable(true);
+export const show_campaign_action = writable(false);
 

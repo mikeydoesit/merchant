@@ -1,7 +1,14 @@
 <script>
+	import { slide } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
+    import { show_campaign_action } from '$lib/store.js'
     export let status = '';
     export let edit_date = '';
     export let main_action_text = '';
+
+    const toggle_campaign_action_menu = () => {
+        show_campaign_action.set(true)
+    }
 </script>
 
 <style lang="postcss">
@@ -40,13 +47,13 @@
     }
 </style>
 
-<section class="campaign_preview_lg">
+<section class="campaign_preview_lg" transition:slide={{ delay: 0, duration: 200, easing: quintOut, axis: 'x' }} >
     <div class="card">
         <div class="card_heading">
             <div class="status_label">
                 <span>{status}</span>
             </div>
-            <div class="img_wrapper">
+            <div class="img_wrapper" on:click={toggle_campaign_action_menu}>
                 <img src="/images/more_dots.png" alt="icon"/>
             </div>
         </div>

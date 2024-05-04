@@ -6,7 +6,7 @@
 
 <style lang="postcss">
   .tapbar_menu_layout {
-    @apply h-full relative;
+    @apply h-dvh relative;
   }
 </style>
   
