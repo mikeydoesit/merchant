@@ -1,6 +1,6 @@
 <script>
   import "../../styles/global.css";
-  import { show_settings_menu, show_campaigns_menu } from '$lib/store.js'
+  import { show_settings_menu, show_campaigns_menu, show_add_campaign } from '$lib/store.js'
   import Tapbar from "../../components/Tapbar.svelte";
 </script>
 
@@ -12,7 +12,7 @@
   
 <div class="tapbar_menu_layout">
   <slot />
-  {#if !$show_settings_menu && !$show_campaigns_menu}
+  {#if !$show_settings_menu && !$show_campaigns_menu && !$show_add_campaign}
     <Tapbar />
   {/if}
 </div>

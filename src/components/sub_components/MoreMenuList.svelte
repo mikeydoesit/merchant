@@ -1,4 +1,6 @@
 <script>
+    import { pocketbase } from '$lib/pocketbase'
+    import { goto } from '$app/navigation';
     import { show_settings_menu, show_more_component, show_campaigns_menu } from '$lib/store.js';
 
     const toggle_settings_menu = () => {
@@ -8,6 +10,10 @@
     const toggle_campaigns_menu = () => {
         show_more_component.set(false);
         show_campaigns_menu.set(true);
+    }
+    const sign_out = () => {
+        pocketbase.authStore.clear();
+        goto('/auth')
     }
 </script>
 
@@ -73,7 +79,7 @@
                 <img src="/images/chevron_right.png" alt="icon" />
             </div>
         </li>
-        <li class="list_item">
+        <li class="list_item" on:click={sign_out}>
             <div class="left_col">
                 <div class="img_wrapper">
                     <img src="/images/sign_out.png" alt="icon" />

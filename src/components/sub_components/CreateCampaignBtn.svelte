@@ -1,5 +1,10 @@
 <script>
+    import { show_campaigns_menu, show_add_campaign } from '$lib/store.js'
 
+    const go_to_add_campaign = () => {
+        show_campaigns_menu.set(false)
+        show_add_campaign.set(true)
+    }
 </script>
 
 <style lang="postcss">
@@ -22,7 +27,7 @@
 </style>
 
 <section class="create_campaign_btn">
-    <div class="create_campaign_btn_inner">
+    <div class="create_campaign_btn_inner" on:click={go_to_add_campaign}>
         <img src="/images/add_dark.png" alt="add icon"/>
         <p class="create_campaign_btn_text">Create a New Campaign</p>
     </div>
