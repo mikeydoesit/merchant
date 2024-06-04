@@ -1,5 +1,5 @@
 <script>
-    import { show_registration_success, show_login_form, show_register_form, show_category_list, show_location_list, selected_category, has_category, selected_location, has_location, selected_category_to_display, selected_location_to_display, register_page_one, register_page_two, register_page_three, name, business_name, business_registration_number, email, password, confirmed_password } from '$lib/store.js';
+    import { show_registration_success, show_login_form, show_register_form, show_category_list, show_location_list, selected_category, has_category, selected_location, has_location, selected_category_to_display, sub_categories_array, selected_location_to_display, register_page_one, register_page_two, name, business_name, business_registration_number, email, password, confirmed_password } from '$lib/store.js';
     import Categories from '$lib/data/Categories.js';
     import accra_locations from '$lib/data/Accra_locations.js'
     import { slide, fade } from 'svelte/transition';
@@ -19,11 +19,13 @@
     let show_password = false;
     let show_confirm_password = false;
     let show_confirm_password_error = false
+    let show_sub_category_error = false
 
     let password_input_wrapper, password_input, confirm_password_wrapper, confirm_password;
 
     let category_obj = {};
     let sub_categories = [];
+    // let sub_categories_array = [];
 
     const go_to_register_page_two = () => {
         if($name.length < 1) {
@@ -46,16 +48,19 @@
         } else {
             show_location_error = false
         }
-        if($has_location && $business_registration_number.length >= 1 && $business_name.length >= 1 && $name.length >= 1) {
-            register_page_one.set(false)
-            register_page_two.set(true)
-        }
-    }
-    const go_to_register_page_three = () => {
         if($has_category == false) {
             show_category_error = true
         } else {
             show_category_error = false
+        }
+        if($sub_categories_array.length < 1) {
+            show_sub_category_error = true
+        } else {
+            show_sub_category_error = false
+        }
+        if($has_category && $has_location && $business_registration_number.length >= 1 && $business_name.length >= 1 && $name.length >= 1 && $sub_categories_array.length > 0) {
+            register_page_one.set(false)
+            register_page_two.set(true)
         }
     }
     const toggle_category_list = () => {
@@ -94,10 +99,6 @@
 
         sub_categories = category_obj.sub_categories
         toggle_category_list();
-    }
-
-    const set_sub_categories_selected = () => {
-
     }
 
     const set_location = (e) => {
@@ -195,7 +196,8 @@
             "business_name": $business_name,
             "business_category": $selected_category_to_display,
             "registration_number": $business_registration_number,
-            "location": $selected_location_to_display
+            "location": $selected_location_to_display,
+            "sub_categories": $sub_categories_array
         };
 
         try {
@@ -227,8 +229,11 @@
     .form_item {
         @apply flex flex-col mb-8;
     }
-    .form_item label {
+    .form_item label, .sub_cat_title {
         @apply pl-1 mb-1.5 text-sm font-semibold;
+    }
+    .sub_cat_title_error {
+        @apply pl-1 mb-6 text-sm font-semibold text-red;
     }
     .form_item #name, .form_item #business_name, .form_item #business_registration_number, .form_item #email {
         @apply border-2 border-border_grey py-3 px-4 rounded-md focus:outline-accent_bg;
@@ -246,18 +251,20 @@
     .category_list_item, .location_list_item {
         @apply py-3 px-4 hover:bg-border_grey_two;
     }
-    .sub_category_list {
-        @apply flex flex-row justify-center items-center text-center flex-wrap gap-2.5;
+    .sub_cat_title {
+        @apply mb-6;
     }
-    
+    .sub_category_list {
+        @apply flex flex-row justify-center items-center text-center flex-wrap gap-2.5 mb-8;
+    }
     .sub_cat_wrapper {
-        @apply relative py-1 px-2 inline border-accent_bg border-2 rounded-full;
+        @apply relative flex justify-center items-center py-1 px-2 inline border-accent_bg border-2 rounded-full;
     }
     .sub_cat_wrapper input[type="checkbox"]{
         @apply opacity-0 w-0 h-0;
     }
     .sub_cat_wrapper label{
-        @apply font-medium text-base mb-0 text-accent_bg;
+        @apply font-medium text-sm mb-0 text-accent_bg;
     }
     .sub_cat_wrapper .cell-bg {
         @apply h-full w-full absolute -z-10 top-0 bottom-0 left-0 right-0 rounded-full;
@@ -279,7 +286,10 @@
         @apply h-7 w-7 flex justify-center items-center cursor-pointer;
     }
     .form_item.next_btn, .form_item.submit_btn {
-        @apply bg-accent_bg py-4 rounded-md text-white font-bold text-lg mt-2 cursor-pointer flex justify-center items-center;
+        @apply bg-accent_bg py-4 rounded-md text-white font-bold text-lg cursor-pointer flex justify-center items-center;
+    }
+    .form_item.submit_btn {
+        @apply mt-2;
     }
     .register_redirect {
         @apply flex items-center justify-center;
@@ -465,7 +475,45 @@
                     </div>
                 {/if}
             </div>
+            <div class="form_item">
+                <label for="category">Category</label>
+                <div class="category_select_input_btn_wrapper">
+                    <div class={`category_select_input_btn ${$show_category_list ? 'border-accent_bg' : 'border-border_grey'}`} on:click={toggle_category_list}>
+                        <span class={`${$has_category ? 'text-black' : 'text-border_grey_four'}`}>{$selected_category_to_display}</span>
+                    </div>
+                    {#if $show_category_list}
+                        <ul class="category_list" transition:slide={{ delay: 250, duration: 300, easing: quintOut, axis: 'y' }}>
+                            {#each Categories as category}
+                            <li class="category_list_item" data-name={category.name} data-tag={category.tag} on:click={set_category}>{category.name}</li>
+                            {/each}
+                        </ul>
+                    {/if}
+                </div>
+                {#if show_category_error}
+                    <div class="category_error" transition:slide={{ delay: 50, duration: 150, easing: quintOut, axis: 'y' }}>
+                        <span class="category_error_text">Looks like you haven't selected a category</span>
+                    </div>
+                {/if}
+            </div>
         </div>
+        {#if sub_categories.length > 0}
+        <div class="sub_category_section">
+            {#if show_sub_category_error}
+                <h6 class="sub_cat_title_error">No product or service selected.</h6>
+            {:else}
+                <h6 class="sub_cat_title">Select the product or services that you offer.</h6>
+            {/if}
+            <div class="sub_category_list">
+                {#each sub_categories as sub_cat}
+                    <div class="sub_cat_wrapper" transition:fade>
+                        <input id="sub_cat_{sub_cat.tag}" type="checkbox" name="sub_category" value={sub_cat.name} bind:group={$sub_categories_array} />
+                        <div class="cell-bg"></div>
+                        <label for="sub_cat_{sub_cat.tag}">{sub_cat.name}</label>
+                    </div>
+                {/each}
+            </div>
+        </div>
+        {/if}
         <div class="form_item next_btn" on:click={go_to_register_page_two}>
             <span>Next</span>
         </div>
@@ -473,135 +521,93 @@
     {#if $register_page_two}
     <div class="register_page_two" transition:slide={{ delay: 50, duration: 300, easing: quintOut, axis: 'x' }}>
         <div class="form_item">
-            <label for="category">Category</label>
-            <div class="category_select_input_btn_wrapper">
-                <div class={`category_select_input_btn ${$show_category_list ? 'border-accent_bg' : 'border-border_grey'}`} on:click={toggle_category_list}>
-                    <span class={`${$has_category ? 'text-black' : 'text-border_grey_four'}`}>{$selected_category_to_display}</span>
-                </div>
-                {#if $show_category_list}
-                    <ul class="category_list" transition:slide={{ delay: 250, duration: 300, easing: quintOut, axis: 'y' }}>
-                        {#each Categories as category}
-                        <li class="category_list_item" data-name={category.name} data-tag={category.tag} on:click={set_category}>{category.name}</li>
-                        {/each}
-                    </ul>
-                {/if}
-            </div>
-            {#if show_category_error}
-                <div class="category_error" transition:slide={{ delay: 50, duration: 150, easing: quintOut, axis: 'y' }}>
-                    <span class="category_error_text">Looks like you haven't selected a category</span>
+            <label for="email">Email</label>
+            <input 
+                on:input={set_email}
+                on:blur={validate_email}
+                type="email" 
+                id="email" 
+                name="email" 
+                placeholder="Enter your email"
+            />
+            {#if show_email_error}
+                <div class="email_error" transition:slide={{ delay: 50, duration: 150, easing: quintOut, axis: 'y' }}>
+                    <span class="email_error_text">Looks like you haven't entered a valid email.</span>
                 </div>
             {/if}
         </div>
-    </div>
-    <div class="sub_category_section">
-        <div class="sub_category_list">
-            {#each sub_categories as sub_cat}
-                <div class="sub_cat_wrapper">
-                    <input id="sub_cat_{sub_cat.tag}" type="checkbox" name="sub_category"/>
-                    <div class="cell-bg"></div>
-                    <label for="sub_cat_{sub_cat.tag}" on:click={set_sub_categories_selected}>{sub_cat.name}</label>
-                </div>
-            {/each}
-        </div>
-    </div>
-    <div class="form_item next_btn" on:click={go_to_register_page_three}>
-        <span>Next</span>
-    </div>
-    {/if}
-    {#if $register_page_three}
-        <div class="register_page_three" transition:slide={{ delay: 50, duration: 300, easing: quintOut, axis: 'x' }}>
-            <div class="form_item">
-                <label for="email">Email</label>
+        <div class="form_item">
+            <label for="password">Password</label>
+            <div class="pwd_wrapper" bind:this={password_input_wrapper}>
                 <input 
-                    on:input={set_email}
-                    on:blur={validate_email}
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    placeholder="Enter your email"
+                    on:input={set_password}
+                    bind:this={password_input}
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="Create a password" 
+                    on:focus={focus_in_password} 
+                    on:blur={focus_out_password}
                 />
-                {#if show_email_error}
-                    <div class="email_error" transition:slide={{ delay: 50, duration: 150, easing: quintOut, axis: 'y' }}>
-                        <span class="email_error_text">Looks like you haven't entered a valid email.</span>
-                    </div>
-                {/if}
+                <div class="toggleVisibility" on:click={toggle_password_visibilty}>
+                    {#if show_password}
+                        <img src="/images/show.png" alt="Your password is visible, click here to mask it." />
+                    {:else}
+                        <img class="hide" src="/images/hide.png" alt="Your password is hidden.  Clicking here will display your password on screen" />
+                    {/if}
+                </div> 
             </div>
-            <div class="form_item">
-                <label for="password">Password</label>
-                <div class="pwd_wrapper" bind:this={password_input_wrapper}>
-                    <input 
-                        on:input={set_password}
-                        bind:this={password_input}
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        placeholder="Create a password" 
-                        on:focus={focus_in_password} 
-                        on:blur={focus_out_password}
-                    />
-                    <div class="toggleVisibility" on:click={toggle_password_visibilty}>
-                        {#if show_password}
-                            <img src="/images/show.png" alt="Your password is visible, click here to mask it." />
-                        {:else}
-                            <img class="hide" src="/images/hide.png" alt="Your password is hidden.  Clicking here will display your password on screen" />
-                        {/if}
-                    </div> 
-                </div>
+        </div>
+        <div class="form_item">
+            <label for="confirm_password">Confirm password</label>
+            <div class="confirm_pwd_wrapper" bind:this={confirm_password_wrapper}>
+                <input
+                    on:input={set_confirm_password}
+                    bind:this={confirm_password} 
+                    type="password" 
+                    id="confirm_password" 
+                    name="confirm_password" 
+                    placeholder="Confirm your password"
+                    on:focus={focus_in_confirm_password} 
+                    on:blur={focus_out_confirm_password}
+                />
+                <div class="toggleVisibility" on:click={toggle_confirm_password_visibilty}>
+                    {#if show_confirm_password}
+                        <img src="/images/show.png" alt="Your password is visible, click here to mask it." />
+                    {:else}
+                        <img class="hide" src="/images/hide.png" alt="Your password is hidden.  Clicking here will display your password on screen" />
+                    {/if}
+                </div> 
             </div>
-            <div class="form_item">
-                <label for="confirm_password">Confirm password</label>
-                <div class="confirm_pwd_wrapper" bind:this={confirm_password_wrapper}>
-                    <input
-                        on:input={set_confirm_password}
-                        bind:this={confirm_password} 
-                        type="password" 
-                        id="confirm_password" 
-                        name="confirm_password" 
-                        placeholder="Confirm your password"
-                        on:focus={focus_in_confirm_password} 
-                        on:blur={focus_out_confirm_password}
-                    />
-                    <div class="toggleVisibility" on:click={toggle_confirm_password_visibilty}>
-                        {#if show_confirm_password}
-                            <img src="/images/show.png" alt="Your password is visible, click here to mask it." />
-                        {:else}
-                            <img class="hide" src="/images/hide.png" alt="Your password is hidden.  Clicking here will display your password on screen" />
-                        {/if}
-                    </div> 
-                </div>
-                {#if show_confirm_password_error}
-                    <div class="confirm_password_error" transition:slide={{ delay: 50, duration: 150, easing: quintOut, axis: 'y' }}>
-                        <span class="confirm_password_error_text">Check the password confirmation. It appears to not be a match.</span>
-                    </div>
-                {/if}
-            </div>
-            {#if submitting_registration}
-                <div class="form_item submit_btn">
-                    <div class="loader">
-                        <div class="bar1"></div>
-                        <div class="bar2"></div>
-                        <div class="bar3"></div>
-                        <div class="bar4"></div>
-                        <div class="bar5"></div>
-                        <div class="bar6"></div>
-                        <div class="bar7"></div>
-                        <div class="bar8"></div>
-                        <div class="bar9"></div>
-                        <div class="bar10"></div>
-                        <div class="bar11"></div>
-                        <div class="bar12"></div>
-                    </div>
-                </div>
-            {:else}
-                <div class="form_item submit_btn" on:click={submit_registration}>
-                    <span>Register</span>
+            {#if show_confirm_password_error}
+                <div class="confirm_password_error" transition:slide={{ delay: 50, duration: 150, easing: quintOut, axis: 'y' }}>
+                    <span class="confirm_password_error_text">Check the password confirmation. It appears to not be a match.</span>
                 </div>
             {/if}
-
-
-            
-
         </div>
+        {#if submitting_registration}
+            <div class="form_item submit_btn">
+                <div class="loader">
+                    <div class="bar1"></div>
+                    <div class="bar2"></div>
+                    <div class="bar3"></div>
+                    <div class="bar4"></div>
+                    <div class="bar5"></div>
+                    <div class="bar6"></div>
+                    <div class="bar7"></div>
+                    <div class="bar8"></div>
+                    <div class="bar9"></div>
+                    <div class="bar10"></div>
+                    <div class="bar11"></div>
+                    <div class="bar12"></div>
+                </div>
+            </div>
+        {:else}
+            <div class="form_item submit_btn" on:click={submit_registration}>
+                <span>Register</span>
+            </div>
+        {/if}
+    </div>
     {/if}
     <div class="register_redirect">
         <p class="register_redirect_count">Already have an account? <span class="register_redirect_link" on:click={go_to_login_form}>Login</span></p>

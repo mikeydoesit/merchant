@@ -1,13 +1,63 @@
 <script>
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-    import { show_campaign_action } from '$lib/store.js'
-    export let status = '';
-    export let edit_date = '';
-    export let main_action_text = '';
+    import { show_campaign_action, show_active_campaigns, show_draft_campaigns } from '$lib/store.js'
 
-    const toggle_campaign_action_menu = () => {
+    
+
+    export let merchant = '';
+    export let pb = {}
+    const new_campaign = new FormData();
+
+    const edit_campaign = () => {
+        console.log('edit')
+    }
+    const publish_campaign =  async (id) => {
+
+        new_campaign.append('is_active', true);
+
+        try {
+            const record = await pb.collection('campaigns').update(id, new_campaign);
+        } catch (error) {
+            console.log(error)
+        } finally {
+            set_campaign_list()
+            show_draft_campaigns.set(false)
+            show_active_campaigns.set(true)
+        }
+    }
+
+    const set_campaign_list = async () => {
+        try {
+            const draft_result_list = await pb.collection('campaigns').getList(1, 50, {
+                filter: `is_active = false && merchant = "${merchant.id}"`,
+                expand: 'merchant'
+            })
+            const active_result_list = await pb.collection('campaigns').getList(1, 50, {
+                filter: `is_active = true && merchant = "${merchant.id}"`,
+                expand: 'merchant'
+            })
+
+            if(draft_result_list && $show_draft_campaigns) {
+                return draft_result_list.items
+            } else if(active_result_list && $show_active_campaigns) {
+                return active_result_list.items
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    let get_campaign_list = set_campaign_list()
+    
+
+    const toggle_campaign_action_menu = (e) => {
+        sessionStorage.setItem("selected_campaign", e.target.dataset.selected_campaign)
         show_campaign_action.set(true)
+    }
+    const formatDate = (dateString) => {
+        let locale = Intl.DateTimeFormat().resolvedOptions().locale;
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        return new Date(dateString).toLocaleDateString(locale, options);
     }
 </script>
 
@@ -30,6 +80,9 @@
     .card_heading .img_wrapper {
         @apply h-5 w-5 cursor-pointer;
     }
+    .card_heading .img_wrapper img {
+        @apply pointer-events-none;
+    }
     .card_main h4 {
         @apply font-semibold mb-1;
     }
@@ -48,23 +101,37 @@
 </style>
 
 <section class="campaign_preview_lg" transition:slide={{ delay: 0, duration: 200, easing: quintOut, axis: 'x' }} >
-    <div class="card">
-        <div class="card_heading">
-            <div class="status_label">
-                <span>{status}</span>
-            </div>
-            <div class="img_wrapper" on:click={toggle_campaign_action_menu}>
-                <img src="/images/more_dots.png" alt="icon"/>
-            </div>
-        </div>
-        <div class="card_main">
-            <h4>Up to 40% Off on Scale and Polish (Dental Services) - All Smiles Dental</h4>
-            <span class="edit_date">Last modified on: {edit_date}</span>
-        </div>
-        <div class="card_footer">
-            <div class="main_action_btn">
-                <span>{main_action_text}</span>
-            </div>
-        </div>
-    </div>
+        {#await get_campaign_list}
+            <p>...waiting</p>
+        {:then campaign_list}
+            {#each campaign_list as campaign}
+                <div class="card" transition:slide={{ delay: 0, duration: 200, easing: quintOut, axis: 'x' }} >
+                    <div class="card_heading">
+                        <div class="status_label">
+                            {#if $show_active_campaigns}
+                                <span>Active</span>
+                            {:else if $show_draft_campaigns}
+                                <span>Draft</span>
+                            {/if}
+                        </div>
+                        <div class="img_wrapper" on:click={toggle_campaign_action_menu} data-selected_campaign={campaign.id}>
+                            <img src="/images/more_dots.png" alt="icon"/>
+                        </div>
+                    </div>
+                    <div class="card_main">
+                        <h4>{campaign.product_name} ({campaign.sub_category}) - {campaign.expand.merchant.business_name}</h4>
+                        <span class="edit_date">Last modified on: {formatDate(campaign.updated)}</span>
+                    </div>
+                    <div class="card_footer">
+                        <div class="main_action_btn" on:click={$show_active_campaigns ? edit_campaign(campaign.id) : publish_campaign(campaign.id)} data-campaign_id={campaign.id}>
+                            {#if $show_active_campaigns}
+                                <span>Edit</span>
+                            {:else if $show_draft_campaigns}
+                                <span>Publish</span>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            {/each}
+        {/await}
 </section>

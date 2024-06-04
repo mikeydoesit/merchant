@@ -5,8 +5,10 @@
 	import CampaignTabs from './sub_components/CampaignTabs.svelte';
 	import CreateCampaignBtn from './sub_components/CreateCampaignBtn.svelte';
 	import CampaignPreviewLg from './sub_components/CampaignPreviewLg.svelte';
-    import { show_active_campaigns, show_draft_campaigns, show_campaign_action } from '$lib/store.js' 
+    import { show_active_campaigns, show_draft_campaigns, show_campaign_action, draft_result_list, active_result_list } from '$lib/store.js' 
+    import { pocketbase, currentUser } from "$lib/pocketbase";
 	import CampaignActionMenu from './sub_components/CampaignActionMenu.svelte';
+
 </script>
 
 <style lang="postcss">
@@ -24,21 +26,19 @@
     <CreateCampaignBtn />
     {#if $show_draft_campaigns}
         <CampaignPreviewLg
-            status={'Draft'}
-            edit_date={'29/01/2024'}
-            main_action_text={'Continue building'}
+            merchant={$currentUser}
+            pb={pocketbase}
         />
     {/if}
     {#if $show_active_campaigns}
-        {#each Array(2) as _}
-            <CampaignPreviewLg
-                status={'Active'}
-                edit_date={'14/12/2023'}
-                main_action_text={'Edit'}
-            />
-        {/each}
+        <CampaignPreviewLg
+            merchant={$currentUser}
+            pb={pocketbase}
+        />
     {/if}
     {#if $show_campaign_action}
-        <CampaignActionMenu />
+        <CampaignActionMenu
+            pb={pocketbase}
+        />
     {/if}
 </div>
