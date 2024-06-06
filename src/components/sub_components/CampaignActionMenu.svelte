@@ -53,18 +53,50 @@
         show_product_name_field.set(!$show_product_name_field)
         show_product_name_input.set(!$show_product_name_input)
 
+        // close other fields
+        show_category_field.set(true)
+        show_category_input.set(false)
+        show_original_price_field.set(true)
+        show_original_price_input.set(false)
+        show_discount_type_value_field.set(true)
+        show_discount_type_value_input.set(false)
+
     }
     const toggle_category_field = () => {
         show_category_field.set(!$show_category_field)
         show_category_input.set(!$show_category_input)
+
+        // close other fields
+        show_product_name_field.set(true)
+        show_product_name_input.set(false)
+        show_original_price_field.set(true)
+        show_original_price_input.set(false)
+        show_discount_type_value_field.set(true)
+        show_discount_type_value_input.set(false)
     }
     const toggle_original_price_field = () => {
         show_original_price_field.set(!$show_original_price_field)
         show_original_price_input.set(!$show_original_price_input)
+
+        // close other fields
+        show_product_name_field.set(true)
+        show_product_name_input.set(false)
+        show_category_field.set(true)
+        show_category_input.set(false)
+        show_discount_type_value_field.set(true)
+        show_discount_type_value_input.set(false)
     }
     const toggle_discount_type_value_field = () => {
         show_discount_type_value_field.set(!$show_discount_type_value_field)
         show_discount_type_value_input.set(!$show_discount_type_value_input)
+
+        // close other fields
+        show_product_name_field.set(true)
+        show_product_name_input.set(false)
+        show_category_field.set(true)
+        show_category_input.set(false)
+        show_original_price_field.set(true)
+        show_original_price_input.set(false)
     }
     const update_field_value = (e) => {
 
@@ -118,7 +150,7 @@
     }
 
     .list_item_form_field_wrapper {
-        @apply flex flex-row justify-between items-center gap-6 w-full;
+        @apply flex flex-row justify-between items-center gap-6 w-full px-2;
     }
     .field_wrapper {
         @apply flex flex-col justify-between w-8/12;
@@ -133,7 +165,7 @@
         @apply flex flex-col gap-1.5 w-auto;
     }
     .back_btn, .save_btn {
-        @apply bg-accent_bg text-main_bg text-sm px-4 py-1 rounded-md font-medium flex justify-center;
+        @apply bg-accent_bg text-main_bg text-sm px-4 py-1 rounded-md font-medium flex justify-center cursor-pointer;
     }
 
 
