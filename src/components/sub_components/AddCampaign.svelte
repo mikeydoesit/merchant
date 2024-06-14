@@ -4,7 +4,7 @@
     import { createApi } from 'unsplash-js';
     import { PUBLIC_UNSPLASH_ACCESS_KEY } from '$env/static/public';
     import SectionTitle from './SectionTitle.svelte'
-    import { product_service_name, show_product_category_list, has_product_category, selected_product_category_to_display, original_price, discount_type, discount_percentage, show_add_campaign_page_one, show_add_campaign_page_two, show_stock_images, stock_images, stock_images_array, selected_stock_images, selected_stock_images_ids, selected_internal_storage_images } from '$lib/store';
+    import { product_service_name, show_product_category_list, has_product_category, selected_product_category_to_display, original_price, discount_type, discount_percentage, show_add_campaign_page_one, show_add_campaign, show_campaigns_menu, show_add_campaign_page_two, show_stock_images, stock_images, stock_images_array, selected_stock_images, selected_stock_images_ids, selected_internal_storage_images } from '$lib/store';
 	import SelectedImageList from './SelectedImageList.svelte';
 
     export let sub_category_list = [];
@@ -145,7 +145,6 @@
         } finally {
             uploading_images = false
         }
-        console.log($selected_stock_images)
     }
     const publish_campaign = async () => {
 
@@ -541,7 +540,7 @@
             <span>Upload files</span>
         </div>
         {/if}
-        {#if uploading_images}
+        {#if publishing_campaign}
             <div class="publish_btn">
                 <div class="loader">
                     <div class="bar1"></div>
