@@ -46,6 +46,7 @@ export const selected_location = writable('')
 
 export const show_add_campaign_page_one = writable(true)
 export const show_add_campaign_page_two = writable(false)
+export const show_percent_slider = writable(false)
 export const show_stock_images = writable(false)
 
 export const product_service_name = writable('')
@@ -69,12 +70,17 @@ export const active_result_list = writable([])
 
 export const show_product_name_field = writable(true)
 export const show_product_name_input = writable(false)
+export const updated_product_service_name = writable('')
 
 export const show_category_field = writable(true)
 export const show_category_input = writable(false)
+export const show_updated_product_category_list = writable(false)
+export const has_updated_product_category = writable(false)
+export const selected_updated_product_category_to_display = writable('Select a category')
 
 export const show_original_price_field = writable(true)
 export const show_original_price_input = writable(false)
+export const updated_original_price = writable(0)
 
 export const show_discount_type_value_field = writable(true)
 export const show_discount_type_value_input = writable(false)

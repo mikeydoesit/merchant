@@ -4,7 +4,7 @@
     import { createApi } from 'unsplash-js';
     import { PUBLIC_UNSPLASH_ACCESS_KEY } from '$env/static/public';
     import SectionTitle from './SectionTitle.svelte'
-    import { product_service_name, show_product_category_list, has_product_category, selected_product_category_to_display, original_price, discount_type, discount_percentage, show_add_campaign_page_one, show_add_campaign, show_campaigns_menu, show_add_campaign_page_two, show_stock_images, stock_images, stock_images_array, selected_stock_images, selected_stock_images_ids, selected_internal_storage_images } from '$lib/store';
+    import { product_service_name, show_product_category_list, has_product_category, selected_product_category_to_display, original_price, discount_type, discount_percentage, show_add_campaign_page_one, show_add_campaign, show_campaigns_menu, show_add_campaign_page_two, show_stock_images, stock_images, stock_images_array, show_percent_slider, selected_stock_images, selected_stock_images_ids, selected_internal_storage_images } from '$lib/store';
 	import SelectedImageList from './SelectedImageList.svelte';
 
     export let sub_category_list = [];
@@ -12,8 +12,6 @@
     export let merchant_id = '';
     export let merchant_category = '';
 
-
-    let show_percent_slider = false
     let show_product_category_error = false
     let uploading_images = false
     let publishing_campaign = false
@@ -89,6 +87,16 @@
         show_product_category_error = false
         toggle_product_category_list()
     }
+    const set_discount_type = (e) => {
+
+        discount_type.set(e.target.value)
+
+        if(e.target.value == 'BOGOF') {
+            show_percent_slider.set(false)
+        } else {
+            show_percent_slider.set(true)
+        }
+    }
     const set_discount_percentage = (e) => {
         discount_percentage.set(e.target.value)
     }
@@ -99,7 +107,7 @@
                 new_campaign.append('product_name', $product_service_name)
                 new_campaign.append('merchant', merchant_id)
                 new_campaign.append('original_price', $original_price)
-                new_campaign.append('discount', $discount_type)
+                new_campaign.append('discount_type', $discount_type)
                 if($discount_type != 'BOGOF') {
                     new_campaign.append('discount_value', $discount_percentage)
                 }
@@ -423,18 +431,18 @@
         <div class="form_item">
             <h6>Discount</h6>
             <div class="discount_select">
-                <div class="discount_type_wrapper" on:click={() => show_percent_slider = false}>
-                    <input id="bogof" type="radio" name="discount_type" bind:group={$discount_type} value="BOGOF"/>
+                <div class="discount_type_wrapper">
+                    <input id="bogof" type="radio" name="discount_type" bind:group={$discount_type} value="BOGOF" on:click={set_discount_type}/>
                     <div class="cell-bg"></div>
                     <label for="bogof">Buy one get one free</label>
                 </div>
-                <div class="discount_type_wrapper" on:click={() => show_percent_slider = true}>
-                    <input id="percent" type="radio" name="discount_type" bind:group={$discount_type} value="Percentage"/>
+                <div class="discount_type_wrapper">
+                    <input id="percent" type="radio" name="discount_type" bind:group={$discount_type} value="Percentage" on:click={set_discount_type}/>
                     <div class="cell-bg"></div>
                     <label for="percent">Percentage</label>
                 </div>
             </div>
-            {#if show_percent_slider}
+            {#if $show_percent_slider}
                 <div class="percent_slider" transition:fade>
                     <div class="PB-range-slider-div">
                         <input type="range" step="5" min="5" max="100" class="PB-range-slider" id="myRange" bind:value={$discount_percentage} on:change={set_discount_percentage}>

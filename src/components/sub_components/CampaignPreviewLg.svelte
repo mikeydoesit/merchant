@@ -63,7 +63,7 @@
 
 <style lang="postcss">
     .campaign_preview_lg {
-        @apply px-4 mt-8;
+        @apply px-4 mt-8 flex flex-col gap-4;
     }
     .card {
         @apply border border-border_grey py-4 px-6 rounded-lg;

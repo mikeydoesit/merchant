@@ -39,6 +39,7 @@
     {#if $show_campaign_action}
         <CampaignActionMenu
             pb={pocketbase}
+            sub_category_list={$currentUser.sub_categories}
         />
     {/if}
 </div>

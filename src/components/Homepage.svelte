@@ -6,6 +6,8 @@
     import SubmittedCampaign from './sub_components/SubmittedCampaign.svelte';
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
+    import { currentUser } from '$lib/pocketbase.js'
+
 </script>
 
 <style lang="postcss">
@@ -17,7 +19,7 @@
 <div transition:slide={{ delay: 250, duration: 300, easing: quintOut, axis: 'x' }} class="homepage_component">
     <HeaderIcons />
     <Greeting 
-        merchant={'Michael'}
+        merchant={$currentUser.business_name}
     />
     <AddCampaignBtn />
     <SectionTitle 

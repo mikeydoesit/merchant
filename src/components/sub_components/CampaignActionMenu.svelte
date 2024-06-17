@@ -2,11 +2,16 @@
 	import { slide, fade } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
     import { onMount } from 'svelte';
-    import { show_campaign_action, show_campaign_action_main, show_campaign_action_edit, show_campaign_action_preview, show_campaign_action_delete, show_product_name_field, show_product_name_input, show_category_field, show_category_input, show_original_price_field, show_original_price_input, show_discount_type_value_field, show_discount_type_value_input, show_product_images_field, show_product_images_input, discount_type, discount_percentage } from '$lib/store.js'
+    import { show_campaign_action, show_campaign_action_main, show_campaign_action_edit, show_campaign_action_preview, show_campaign_action_delete, show_product_name_field, show_product_name_input, show_category_field, updated_product_service_name, show_updated_product_category_list, has_updated_product_category, selected_updated_product_category_to_display, show_category_input, show_original_price_field, show_original_price_input, updated_original_price, show_discount_type_value_field, show_discount_type_value_input, show_product_images_field, show_product_images_input, discount_type, discount_percentage } from '$lib/store.js'
 
+    export let sub_category_list = [];
     export let pb = {}
+    let updated_campaign = new FormData();
     let campaign = {}
     let show_percent_slider = false
+    let submitting_product_name = false
+    let submitting_product_category = false
+    let submitting_original_price = false
 
     const hide_element = () => {
         show_campaign_action.set(false)
@@ -49,6 +54,29 @@
     }
 
     // EDIT FORM FIELD FUNCTIONS
+    const set_updated_product_service_name = (e) => {
+        updated_product_service_name.set(e.target.value)
+    }
+    const submit_updated_product_service_name = async () => {
+
+        if(!submitting_product_name) {
+
+            submitting_product_name = true
+
+            updated_campaign.set('product_name', $updated_product_service_name)
+
+            try {
+                const record = await pb.collection('campaigns').update(campaign_id, updated_campaign);
+            } catch (error) {
+                console.log(error)
+            } finally {
+                campaign_obj()
+                submitting_product_name = false
+                toggle_product_name_field()
+            }
+        }
+
+    }
     const toggle_product_name_field = () => {
         show_product_name_field.set(!$show_product_name_field)
         show_product_name_input.set(!$show_product_name_input)
@@ -74,6 +102,33 @@
         show_discount_type_value_field.set(true)
         show_discount_type_value_input.set(false)
     }
+    const toggle_updated_product_category_list = () => {
+        show_updated_product_category_list.set(!$show_updated_product_category_list)
+    }
+    const set_updated_product_category = (e) => {
+        selected_updated_product_category_to_display.set(e.target.dataset.name)
+        has_updated_product_category.set(true)
+        toggle_updated_product_category_list()
+    }
+    const submit_updated_product_category = async () => {
+
+        if(!submitting_product_category) {
+
+            submitting_product_category = true
+
+            updated_campaign.set('sub_category', $selected_updated_product_category_to_display)
+
+            try {
+                const record = await pb.collection('campaigns').update(campaign_id, updated_campaign);
+            } catch (error) {
+                console.log(error)
+            } finally {
+                campaign_obj()
+                submitting_product_category = false
+                toggle_category_field()
+            }
+        }
+    }
     const toggle_original_price_field = () => {
         show_original_price_field.set(!$show_original_price_field)
         show_original_price_input.set(!$show_original_price_input)
@@ -85,6 +140,29 @@
         show_category_input.set(false)
         show_discount_type_value_field.set(true)
         show_discount_type_value_input.set(false)
+    }
+    const set_updated_original_price = (e) => {
+        updated_original_price.set(e.target.value)
+    }
+    const submit_updated_original_price = async () => {
+
+        if(!submitting_original_price) {
+
+            submitting_original_price = true
+
+            updated_campaign.set('original_price', $updated_original_price)
+
+            try {
+                const record = await pb.collection('campaigns').update(campaign_id, updated_campaign);
+            } catch (error) {
+                console.log(error)
+            } finally {
+                campaign_obj()
+                submitting_original_price = false
+                toggle_original_price_field()
+            }
+        }
+
     }
     const toggle_discount_type_value_field = () => {
         show_discount_type_value_field.set(!$show_discount_type_value_field)
@@ -155,11 +233,27 @@
     .field_wrapper {
         @apply flex flex-col justify-between w-8/12;
     }
-    .field_wrapper label, .list_item_form_field_wrapper h5 {
+    .field_wrapper label, .list_item_form_field_wrapper h5, .discount_title {
         @apply pl-1 mb-1.5 text-sm font-semibold;
     }
-    .field_wrapper #product_name_input {
+    .discount_title {
+        @apply pl-3 mb-4;
+    }
+    .field_wrapper #product_name_input, .field_wrapper #original_price_input {
         @apply border-2 border-border_grey py-2 px-4 text-sm rounded-md focus:outline-accent_bg placeholder:text-xs;
+    }
+    .product_category_select_input_btn_wrapper {
+        @apply relative;
+    }
+    .product_category_select_input_btn {
+        @apply border-2 py-2 px-4 rounded-md text-xs;
+    }
+    .product_category_list {
+        @apply absolute top-full mt-2 z-10 bg-main_bg w-full h-32 rounded-lg overflow-y-scroll;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+    }
+    .product_category_list_item {
+        @apply py-2 px-4 hover:bg-border_grey_two text-xs;
     }
     .btns_wrapper {
         @apply flex flex-col gap-1.5 w-auto;
@@ -194,10 +288,10 @@
         @apply text-white bg-accent_bg;
     }
     .percent_slider {
-        @apply mt-6;
+        @apply mt-4;
     }
     .PB-range-slider {
-        @apply h-1 w-full bg-accent_bg opacity-70;
+        @apply h-0.5 w-full bg-accent_bg opacity-70;
         -webkit-appearance: none;
         outline: none;
         -webkit-transition: .2s;
@@ -205,28 +299,115 @@
     }
 
     .PB-range-slider::-webkit-slider-thumb {
-        @apply h-4 w-4 rounded-full cursor-pointer bg-accent_bg;
+        @apply h-3 w-3 rounded-full cursor-pointer bg-accent_bg;
         -webkit-appearance: none;
         appearance: none;
         transition: 0.3s ease-in-out;
     }
 
     .PB-range-slider::-webkit-slider-thumb:hover {
-        box-shadow: 0px 0px 0px 8px rgba(0, 129, 175, 0.16);
+        box-shadow: 0px 0px 0px 5px rgba(0, 129, 175, 0.16);
         transition: 0.3s ease-in-out;
     }
 
     .PB-range-slider::-moz-range-thumb {
-        @apply h-4 w-4 rounded-full cursor-pointer bg-accent_bg;
+        @apply h-3 w-3 rounded-full cursor-pointer bg-accent_bg;
     }
 
     .PB-range-slider-div {
-        @apply flex flex-row justify-center items-center gap-4 py-4 px-6 rounded-full;
+        @apply flex flex-row justify-center items-center gap-3 py-3 px-4 rounded-full;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
 
     .PB-range-slidervalue {
-        @apply font-black text-accent_bg text-nowrap;
+        @apply font-black text-accent_bg text-nowrap text-sm;
+    }
+
+    /* Button loader */.loader {
+        @apply w-[20px] h-[20px] relative rounded-full; 
+    }
+
+    .loader div {
+        width: 8%;
+        height: 24%;
+        background: rgb(255, 255, 255);
+        position: absolute;
+        left: 50%;
+        top: 30%;
+        opacity: 0;
+        border-radius: 33px;
+        box-shadow: 0 0 2px rgba(0,0,0,0.2);
+        animation: fade458 1s linear infinite;
+    }
+
+    @keyframes fade458 {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0.25;
+        }
+    }
+
+    .loader .bar1 {
+        transform: rotate(0deg) translate(0, -130%);
+        animation-delay: 0s;
+    }
+
+    .loader .bar2 {
+        transform: rotate(30deg) translate(0, -130%);
+        animation-delay: -1.1s;
+    }
+
+    .loader .bar3 {
+        transform: rotate(60deg) translate(0, -130%);
+        animation-delay: -1s;
+    }
+
+    .loader .bar4 {
+        transform: rotate(90deg) translate(0, -130%);
+        animation-delay: -0.9s;
+    }
+
+    .loader .bar5 {
+        transform: rotate(120deg) translate(0, -130%);
+        animation-delay: -0.8s;
+    }
+
+    .loader .bar6 {
+        transform: rotate(150deg) translate(0, -130%);
+        animation-delay: -0.7s;
+    }
+
+    .loader .bar7 {
+        transform: rotate(180deg) translate(0, -130%);
+        animation-delay: -0.6s;
+    }
+
+    .loader .bar8 {
+        transform: rotate(210deg) translate(0, -130%);
+        animation-delay: -0.5s;
+    }
+
+    .loader .bar9 {
+        transform: rotate(240deg) translate(0, -130%);
+        animation-delay: -0.4s;
+    }
+
+    .loader .bar10 {
+        transform: rotate(270deg) translate(0, -130%);
+        animation-delay: -0.3s;
+    }
+
+    .loader .bar11 {
+        transform: rotate(300deg) translate(0, -130%);
+        animation-delay: -0.2s;
+    }
+
+    .loader .bar12 {
+        transform: rotate(330deg) translate(0, -130%);
+        animation-delay: -0.1s;
     }
 </style>
 
@@ -281,15 +462,34 @@
                                 <div class="list_item_form_field_wrapper" transition:slide={{ delay: 0, duration: 100, easing: quintOut, axis: 'x' }}>
                                     <div class="field_wrapper">
                                         <label for="product_name_input">Product/service name</label>
-                                        <input id="product_name_input" type="text" placeholder="Update the product name"/>
+                                        <input id="product_name_input" type="text" placeholder="Update the product name" on:input={set_updated_product_service_name}/>
                                     </div>
                                     <div class="btns_wrapper">
                                         <div class="back_btn" on:click={toggle_product_name_field}>
                                             <span>Back</span>
                                         </div>
-                                        <div class="save_btn">
-                                            <span>Save</span>
-                                        </div>
+                                        {#if submitting_product_name}
+                                            <div class="save_btn" on:click={submit_updated_product_service_name}>
+                                                <div class="loader">
+                                                    <div class="bar1"></div>
+                                                    <div class="bar2"></div>
+                                                    <div class="bar3"></div>
+                                                    <div class="bar4"></div>
+                                                    <div class="bar5"></div>
+                                                    <div class="bar6"></div>
+                                                    <div class="bar7"></div>
+                                                    <div class="bar8"></div>
+                                                    <div class="bar9"></div>
+                                                    <div class="bar10"></div>
+                                                    <div class="bar11"></div>
+                                                    <div class="bar12"></div>
+                                                </div>
+                                            </div>
+                                        {:else}
+                                            <div class="save_btn" on:click={submit_updated_product_service_name}>
+                                                <span>Save</span>
+                                            </div>
+                                        {/if}
                                     </div>
                                 </div>
                             {/if}
@@ -312,15 +512,45 @@
                                 <div class="list_item_form_field_wrapper" transition:slide={{ delay: 0, duration: 0, easing: quintOut, axis: 'x' }}>
                                     <div class="field_wrapper">
                                         <label for="product_name_input">Category</label>
-                                        <input id="product_name_input" type="text" placeholder="Update the product name"/>
+                                        <div class="product_category_select_input_btn_wrapper">
+                                            <div class={`product_category_select_input_btn ${$show_updated_product_category_list ? 'border-accent_bg' : 'border-border_grey'}`} on:click={toggle_updated_product_category_list}>
+                                                <span class={`${$has_updated_product_category ? 'text-black' : 'text-border_grey_four'}`}>{$selected_updated_product_category_to_display}</span>
+                                            </div>
+                                            {#if $show_updated_product_category_list}
+                                                <ul class="product_category_list" transition:slide={{ delay: 250, duration: 300, easing: quintOut, axis: 'y' }}>
+                                                    {#each sub_category_list as list_item}
+                                                    <li class="product_category_list_item" data-name={list_item} on:click={set_updated_product_category}>{list_item}</li>
+                                                    {/each}
+                                                </ul>
+                                            {/if}
+                                        </div>
                                     </div>
                                     <div class="btns_wrapper">
                                         <div class="back_btn" on:click={toggle_category_field}>
                                             <span>Back</span>
                                         </div>
-                                        <div class="save_btn">
-                                            <span>Save</span>
-                                        </div>
+                                        {#if submitting_product_category}
+                                            <div class="save_btn" on:click={submit_updated_product_category}>
+                                                <div class="loader">
+                                                    <div class="bar1"></div>
+                                                    <div class="bar2"></div>
+                                                    <div class="bar3"></div>
+                                                    <div class="bar4"></div>
+                                                    <div class="bar5"></div>
+                                                    <div class="bar6"></div>
+                                                    <div class="bar7"></div>
+                                                    <div class="bar8"></div>
+                                                    <div class="bar9"></div>
+                                                    <div class="bar10"></div>
+                                                    <div class="bar11"></div>
+                                                    <div class="bar12"></div>
+                                                </div>
+                                            </div>
+                                        {:else}
+                                            <div class="save_btn" on:click={submit_updated_product_category}>
+                                                <span>Save</span>
+                                            </div>
+                                        {/if}
                                     </div>
                                 </div>
                             {/if}
@@ -343,15 +573,34 @@
                                 <div class="list_item_form_field_wrapper" transition:slide={{ delay: 0, duration: 0, easing: quintOut, axis: 'x' }}>
                                     <div class="field_wrapper">
                                         <label for="original_price_input">Original price</label>
-                                        <input id="original_price_input" type="number" placeholder="Update the original price"/>
+                                        <input id="original_price_input" type="number" placeholder="Update the original price" on:input={set_updated_original_price}/>
                                     </div>
                                     <div class="btns_wrapper">
                                         <div class="back_btn" on:click={toggle_original_price_field}>
                                             <span>Back</span>
                                         </div>
-                                        <div class="save_btn">
-                                            <span>Save</span>
-                                        </div>
+                                        {#if submitting_original_price}
+                                            <div class="save_btn" on:click={submit_updated_original_price}>
+                                                <div class="loader">
+                                                    <div class="bar1"></div>
+                                                    <div class="bar2"></div>
+                                                    <div class="bar3"></div>
+                                                    <div class="bar4"></div>
+                                                    <div class="bar5"></div>
+                                                    <div class="bar6"></div>
+                                                    <div class="bar7"></div>
+                                                    <div class="bar8"></div>
+                                                    <div class="bar9"></div>
+                                                    <div class="bar10"></div>
+                                                    <div class="bar11"></div>
+                                                    <div class="bar12"></div>
+                                                </div>
+                                            </div>
+                                        {:else}
+                                            <div class="save_btn" on:click={submit_updated_original_price}>
+                                                <span>Save</span>
+                                            </div>
+                                        {/if}
                                     </div>
                                 </div>
                             {/if}
@@ -363,7 +612,7 @@
                                 <div class="list_item_content_wrapper" transition:slide={{ delay: 0, duration: 0, easing: quintOut, axis: 'x' }}>
                                     <div class="list_item_content">
                                         <h6>Discount</h6>
-                                        <span>{campaign.discount}</span>
+                                        <span>{campaign.discount_type}</span>
                                     </div>
                                     <div class="edit_icon" on:click={toggle_discount_type_value_field}>
                                         <img src="/images/edit.png" />
@@ -371,8 +620,8 @@
                                 </div>
                             {/if}
                             {#if $show_discount_type_value_input}
+                            <h5 class="discount_title">Discount</h5>
                                 <div class="list_item_form_field_wrapper" transition:slide={{ delay: 0, duration: 0, easing: quintOut, axis: 'x' }}>
-                                    <h5>Discount</h5>
                                     <div class="field_wrapper">
                                         <div class="discount_select">
                                             <div class="discount_type_wrapper" on:click={() => show_percent_slider = false}>
