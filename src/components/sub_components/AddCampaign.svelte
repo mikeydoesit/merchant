@@ -152,23 +152,10 @@
             console.log(error)
         } finally {
             uploading_images = false
-        }
-    }
-    const publish_campaign = async () => {
-
-        publishing_campaign = true
-
-        new_campaign.append('is_active', true);
-        let campaign_id = sessionStorage.getItem('id')
-
-        try {
-            const record = await pb.collection('campaigns').update(campaign_id, new_campaign);
-        } catch (error) {
-            console.log(error)
-        } finally {
-            publishing_campaign = false
-            show_add_campaign.set(false)
             show_campaigns_menu.set(true)
+            show_add_campaign_page_two.set(false)
+            show_add_campaign_page_one.set(true)
+            show_add_campaign.set(false)
         }
     }
 </script>
@@ -288,7 +275,10 @@
     .stock_image_select_btns, .image_upload_select_btns {
         @apply mt-6 flex flex-row w-full gap-4 mb-12;
     }
-    .stock_image_select_btns .back_btn, .stock_image_select_btns .upload_btn, .image_upload_select_btns .upload_btn, .image_upload_select_btns .publish_btn {
+    .image_upload_select_btns .upload_btn {
+        @apply w-full bg-accent_bg flex justify-center items-center text-main_bg font-semibold py-3 rounded-lg cursor-pointer hover:bg-accent_bg/80;
+    }
+    .stock_image_select_btns .back_btn, .stock_image_select_btns .upload_btn {
         @apply w-1/2 bg-accent_bg flex justify-center items-center text-main_bg font-semibold py-3 rounded-lg cursor-pointer hover:bg-accent_bg/80;
     }
      /* Slider CSS */
@@ -525,51 +515,31 @@
         <SelectedImageList />
     {/if}
     {#if $show_add_campaign_page_two}
-    <div class="image_upload_select_btns">
-        {#if uploading_images}
-            <div class="upload_btn">
-                <div class="loader">
-                    <div class="bar1"></div>
-                    <div class="bar2"></div>
-                    <div class="bar3"></div>
-                    <div class="bar4"></div>
-                    <div class="bar5"></div>
-                    <div class="bar6"></div>
-                    <div class="bar7"></div>
-                    <div class="bar8"></div>
-                    <div class="bar9"></div>
-                    <div class="bar10"></div>
-                    <div class="bar11"></div>
-                    <div class="bar12"></div>
+        {#if $selected_stock_images.length > 0 || $selected_internal_storage_images.length > 0}
+        <div class="image_upload_select_btns">
+            {#if uploading_images}
+                <div class="upload_btn">
+                    <div class="loader">
+                        <div class="bar1"></div>
+                        <div class="bar2"></div>
+                        <div class="bar3"></div>
+                        <div class="bar4"></div>
+                        <div class="bar5"></div>
+                        <div class="bar6"></div>
+                        <div class="bar7"></div>
+                        <div class="bar8"></div>
+                        <div class="bar9"></div>
+                        <div class="bar10"></div>
+                        <div class="bar11"></div>
+                        <div class="bar12"></div>
+                    </div>
                 </div>
+            {:else}
+            <div class="upload_btn" on:click={upload_images}>
+                <span>Upload Images</span>
             </div>
-        {:else}
-        <div class="upload_btn" on:click={upload_images}>
-            <span>Upload files</span>
+            {/if}
         </div>
         {/if}
-        {#if publishing_campaign}
-            <div class="publish_btn">
-                <div class="loader">
-                    <div class="bar1"></div>
-                    <div class="bar2"></div>
-                    <div class="bar3"></div>
-                    <div class="bar4"></div>
-                    <div class="bar5"></div>
-                    <div class="bar6"></div>
-                    <div class="bar7"></div>
-                    <div class="bar8"></div>
-                    <div class="bar9"></div>
-                    <div class="bar10"></div>
-                    <div class="bar11"></div>
-                    <div class="bar12"></div>
-                </div>
-            </div>
-        {:else}
-        <div class="publish_btn" on:click={publish_campaign}>
-            <span>Publish</span>
-        </div>
-        {/if}
-    </div>
     {/if}
 </section>

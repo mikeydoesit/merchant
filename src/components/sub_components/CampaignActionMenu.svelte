@@ -2,16 +2,22 @@
 	import { slide, fade } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
     import { onMount } from 'svelte';
-    import { show_campaign_action, show_campaign_action_main, show_campaign_action_edit, show_campaign_action_preview, show_campaign_action_delete, show_product_name_field, show_product_name_input, show_category_field, updated_product_service_name, show_updated_product_category_list, has_updated_product_category, selected_updated_product_category_to_display, show_category_input, show_original_price_field, show_original_price_input, updated_original_price, show_discount_type_value_field, show_discount_type_value_input, show_product_images_field, show_product_images_input, discount_type, discount_percentage } from '$lib/store.js'
+    import { createApi } from 'unsplash-js';
+    import { PUBLIC_POCKETBASE_URL, PUBLIC_UNSPLASH_ACCESS_KEY } from '$env/static/public';
+    import { show_campaign_action, show_campaign_action_main, show_campaign_action_edit, show_campaign_action_preview, show_campaign_action_delete, show_product_name_field, show_product_name_input, show_category_field, updated_product_service_name, show_updated_product_category_list, has_updated_product_category, selected_updated_product_category_to_display, show_category_input, show_original_price_field, show_original_price_input, updated_original_price, show_discount_type_value_field, show_discount_type_value_input, show_product_images_field, show_product_images_input, updated_internal_storage_images, show_edit_stock_images, edit_stock_images, edit_stock_images_array, updated_stock_images_ids, updated_stock_images, discount_type, discount_percentage, updated_discount_type, updated_discount_percentage } from '$lib/store.js'
 
     export let sub_category_list = [];
     export let pb = {}
     let updated_campaign = new FormData();
     let campaign = {}
+    let stock_media = []
+    let internal_media = []
     let show_percent_slider = false
     let submitting_product_name = false
     let submitting_product_category = false
     let submitting_original_price = false
+    let submitting_discount = false
+    let submitting_images = false
 
     const hide_element = () => {
         show_campaign_action.set(false)
@@ -23,6 +29,8 @@
             const current_campaign = await pb.collection('campaigns').getOne(campaign_id);
             console.log(current_campaign)
             campaign = current_campaign
+            stock_media = current_campaign.stock_images
+            internal_media = current_campaign.images
         } catch (error) {
             console.log(error)
         }
@@ -176,12 +184,125 @@
         show_original_price_field.set(true)
         show_original_price_input.set(false)
     }
-    const update_field_value = (e) => {
+    const set_updated_discount_percentage = (e) => {
+        updated_discount_percentage.set(e.target.value)
+    }
+    const submit_updated_discount = async () => {
+
+        if(!submitting_discount) {
+
+            submitting_discount = true
+
+            updated_campaign.set('discount_type', $updated_discount_type)
+            if($updated_discount_type == 'BOGOF' || $updated_discount_type == '') {
+                updated_campaign.set('discount_value', null)
+            } else if($updated_discount_type == 'Percentage') {
+                updated_campaign.set('discount_value', $updated_discount_percentage)
+            }
+
+            try {
+                const record = await pb.collection('campaigns').update(campaign_id, updated_campaign);
+            } catch (error) {
+                console.log(error)
+            } finally {
+                campaign_obj()
+                submitting_discount = false
+                toggle_discount_type_value_field()
+            }
+        }
+    }
+    const toggle_images_field = () => {
+        show_product_images_field.set(!$show_product_images_field)
+        show_product_images_input.set(!$show_product_images_input)
+
+        // close other fields
+        show_product_name_field.set(true)
+        show_product_name_input.set(false)
+        show_category_field.set(true)
+        show_category_input.set(false)
+        show_original_price_field.set(true)
+        show_original_price_input.set(false)
+        show_discount_type_value_field.set(true)
+        show_discount_type_value_input.set(false)
 
     }
+    const update_selected_internal_storage_images = (e) => {
+        updated_internal_storage_images.set(e.target.files)
+    }
 
-    const set_discount_percentage = (e) => {
-        discount_percentage.set(e.target.value)
+    // UNSPLASH INSTANCE
+
+    const unsplash = createApi({
+        accessKey: PUBLIC_UNSPLASH_ACCESS_KEY
+    });
+    const search_unsplash = () => { 
+        show_product_images_input.set(false)
+        show_edit_stock_images.set(true)
+        
+        unsplash.search.getPhotos({
+            query: campaign.product_name,
+            per_page: 30
+        }).then(result => {
+            if(result.type == 'success') {
+                edit_stock_images.set(result.response.results)
+                edit_stock_images_array.set($edit_stock_images.map((item) => {
+                    return {
+                        id: item.id,
+                        name: item.alt_description,
+                        url: item.urls.regular
+                    }
+                }))
+            }
+        });
+    }
+    const set_updated_stock_images_list = () => {
+        updated_stock_images.set($updated_stock_images_ids.map((id) => {
+            return $edit_stock_images_array.find(image => image.id === id)
+        }))
+    }
+    const back_to_image_input = () => {
+        show_edit_stock_images.set(false)
+        show_product_images_input.set(true)
+    }
+    const clear_images = () => {
+        updated_internal_storage_images.set([])
+        updated_stock_images.set([])
+        edit_stock_images_array.set([])
+        updated_stock_images_ids.set([])
+    }
+    const submit_updated_images = async () => {
+
+        if(!submitting_images) {
+
+            submitting_images = true
+
+            updated_campaign.set('stock_images', JSON.stringify($updated_stock_images));
+        
+            for (let file of $updated_internal_storage_images) {
+                updated_campaign.append('images', file);
+            }
+
+            let images_field_reset = new FormData();
+
+            images_field_reset.set('images', '')
+
+            try {
+                const reset = await pb.collection('campaigns').update(campaign_id, images_field_reset);
+            } catch (error) {
+                console.log(error)
+                submitting_images = false
+            } finally {
+                try {
+                    const record = await pb.collection('campaigns').update(campaign_id, updated_campaign);
+                } catch (error) {
+                    console.log(error)
+                } finally {
+                    campaign_obj()
+                    submitting_images = false
+                    toggle_images_field()
+                }
+            }
+        }
     }
 </script>
 
@@ -193,7 +314,7 @@
         @apply h-full w-full relative bg-transparent flex flex-col justify-end;
     }
     .campaign_action_menu_inner {
-        @apply bg-main_bg h-auto w-full rounded-t-3xl z-20 px-8 py-8;
+        @apply bg-main_bg h-auto max-h-[80vh] w-full rounded-t-3xl z-20 px-8 py-8 overflow-y-scroll;
     }
     .campaign_action_menu_main, .campaign_action_menu_edit, .campaign_action_menu_preview {
         @apply h-auto w-full;
@@ -214,11 +335,17 @@
         @apply flex flex-col gap-4;
     }
     .list_item_content_wrapper {
-        @apply flex flex-row justify-between items-center border border-border_grey rounded-md px-3 py-1.5 gap-4;
+        @apply flex flex-row justify-between items-center border border-border_grey rounded-md px-3 py-1.5 gap-2;
     }
     .edit_icon {
-        @apply h-9 w-9 cursor-pointer flex justify-center items-center p-2 rounded-md;
+        @apply h-auto w-auto cursor-pointer flex justify-center items-center p-2 rounded-md;
         box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    }
+    .edit_icon img {
+        @apply w-4;
+    }
+    .list_item_content {
+        @apply w-4/5;
     }
     .list_item_content h6 {
         @apply text-black font-semibold mb-1;
@@ -230,14 +357,21 @@
     .list_item_form_field_wrapper {
         @apply flex flex-row justify-between items-center gap-6 w-full px-2;
     }
+    .list_item_form_field_wrapper.images_container {
+        @apply flex-col gap-3 ;
+    }
     .field_wrapper {
         @apply flex flex-col justify-between w-8/12;
     }
+    .discount_select, 
     .field_wrapper label, .list_item_form_field_wrapper h5, .discount_title {
         @apply pl-1 mb-1.5 text-sm font-semibold;
     }
     .discount_title {
         @apply pl-3 mb-4;
+    }
+    .discount_list_item_content {
+        @apply flex flex-row gap-6;
     }
     .field_wrapper #product_name_input, .field_wrapper #original_price_input {
         @apply border-2 border-border_grey py-2 px-4 text-sm rounded-md focus:outline-accent_bg placeholder:text-xs;
@@ -260,6 +394,110 @@
     }
     .back_btn, .save_btn {
         @apply bg-accent_bg text-main_bg text-sm px-4 py-1 rounded-md font-medium flex justify-center cursor-pointer;
+    }
+    .list_item_content .images_h6 {
+        @apply mb-3;
+    }
+    .images_grid {
+        @apply grid grid-cols-upload_thumbnail_grid gap-2 w-full;
+    }
+    .grid_item_wrapper {
+        @apply h-9;
+    }
+    .grid_item {
+        @apply h-full w-full object-center object-cover;
+    }
+    .image_uploader_field_wrapper {
+        @apply w-full mb-3;
+    }
+
+    .image_uploader_wrapper {
+        @apply w-full flex flex-row items-center justify-evenly;
+    }
+    #image_uploader_btn {
+        @apply h-0 w-0 opacity-0 absolute;
+    }
+    .image_uploader_btn {
+        @apply flex items-center justify-center;
+    }
+    .image_uploader {
+        @apply flex justify-center items-center relative border-2 border-[#606061] rounded-2xl border-dashed w-fit p-2.5;
+    }
+    .image_uploader label {
+        @apply flex  justify-center items-center;
+    }
+    .image_uploader .upload_icon {
+        @apply h-10 w-10;
+    }
+    .image_uploader_wrapper .mid_text {
+        @apply my-2.5 font-semibold text-border_grey_four text-sm;
+    }
+    .stock_image_btn {
+        @apply text-center rounded-3xl;
+    }
+    .internal_storage_btn, .stock_image_btn {
+        @apply bg-accent_bg text-xs text-white px-8 py-2.5 rounded-lg font-semibold;
+    }
+    .thumbnails_wrapper {
+        @apply flex flex-row gap-3 justify-between items-center w-full;
+    }
+    .clear_btn {
+        @apply flex justify-center items-center cursor-pointer;
+   }
+    .clear_btn img {
+        @apply w-6 h-6;
+    }
+    .thumbnails_placeholder {
+        @apply py-4 px-3 text-border_grey_five rounded-lg bg-border_grey_two w-full flex justify-center;
+    }
+    .thumbnails_placeholder span {
+        @apply italic text-sm;
+    }
+    .stock_image_select {
+        @apply h-[25vh] overflow-y-scroll;
+    }
+    .stock_image_select_inner {
+        @apply w-full gap-2;
+        column-count: 3;
+    }
+    .stock_image_item {
+        @apply w-full h-fit row-auto relative mb-4 cursor-pointer block;
+        -webkit-column-break-inside: avoid;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    .stock_image_item .item_input {
+        @apply absolute h-0 w-0 opacity-0;
+    }
+    .stock_image_item .item_input:checked + .stock_image_overlay img {
+        @apply block;
+    }
+    .stock_image_item .item_input:checked + .stock_image_overlay {
+        @apply bg-black/30;
+    }
+    .stock_image {
+        @apply w-full h-full object-center object-cover;
+    }
+    .stock_image_overlay {
+        @apply absolute z-10 top-0 bottom-0 left-0 right-0 flex justify-center items-center cursor-pointer ease-in-out duration-300 hover:bg-black/30;
+    }
+    .stock_image_overlay img {
+        @apply h-9 w-9 hidden;
+    }
+    .edit_stock_image_back_btn {
+        @apply my-3 flex flex-row w-full;
+    }
+    .edit_stock_image_back_btn .back_btn {
+        @apply w-full bg-accent_bg flex justify-center items-center text-main_bg font-semibold py-3 rounded-lg cursor-pointer hover:bg-accent_bg/80;
+    }
+    .main_edit_image_select_btns {
+        @apply mt-3 flex flex-row w-full gap-4 mb-6;
+    }
+    .upload_btn {
+        @apply w-full bg-accent_bg flex justify-center items-center text-main_bg font-semibold py-3 rounded-lg cursor-pointer hover:bg-accent_bg/80;
+    }
+    .main_edit_image_select_btns .back_btn, .main_edit_image_select_btns .upload_btn {
+        @apply w-1/2 bg-accent_bg flex justify-center items-center text-main_bg font-semibold py-3 rounded-lg cursor-pointer hover:bg-accent_bg/80;
     }
 
 
@@ -288,7 +526,7 @@
         @apply text-white bg-accent_bg;
     }
     .percent_slider {
-        @apply mt-4;
+        @apply mt-3;
     }
     .PB-range-slider {
         @apply h-0.5 w-full bg-accent_bg opacity-70;
@@ -315,7 +553,7 @@
     }
 
     .PB-range-slider-div {
-        @apply flex flex-row justify-center items-center gap-3 py-3 px-4 rounded-full;
+        @apply flex flex-row justify-center items-center gap-3 py-2 px-4 rounded-full;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
 
@@ -612,7 +850,12 @@
                                 <div class="list_item_content_wrapper" transition:slide={{ delay: 0, duration: 0, easing: quintOut, axis: 'x' }}>
                                     <div class="list_item_content">
                                         <h6>Discount</h6>
-                                        <span>{campaign.discount_type}</span>
+                                        <div class="discount_list_item_content">
+                                            <span>{campaign.discount_type}</span>
+                                            {#if campaign.discount_type == 'Percentage'}
+                                                <span>{campaign.discount_value}%</span>
+                                            {/if}
+                                        </div>
                                     </div>
                                     <div class="edit_icon" on:click={toggle_discount_type_value_field}>
                                         <img src="/images/edit.png" />
@@ -625,12 +868,12 @@
                                     <div class="field_wrapper">
                                         <div class="discount_select">
                                             <div class="discount_type_wrapper" on:click={() => show_percent_slider = false}>
-                                                <input id="bogof" type="radio" name="discount_type" bind:group={$discount_type} value="BOGOF"/>
+                                                <input id="bogof" type="radio" name="discount_type" bind:group={$updated_discount_type} value="BOGOF"/>
                                                 <div class="cell-bg"></div>
                                                 <label for="bogof">Buy one get one free</label>
                                             </div>
                                             <div class="discount_type_wrapper" on:click={() => show_percent_slider = true}>
-                                                <input id="percent" type="radio" name="discount_type" bind:group={$discount_type} value="Percentage"/>
+                                                <input id="percent" type="radio" name="discount_type" bind:group={$updated_discount_type} value="Percentage"/>
                                                 <div class="cell-bg"></div>
                                                 <label for="percent">Percentage</label>
                                             </div>
@@ -638,8 +881,8 @@
                                         {#if show_percent_slider}
                                             <div class="percent_slider" transition:fade>
                                                 <div class="PB-range-slider-div">
-                                                    <input type="range" step="5" min="5" max="90" class="PB-range-slider" id="myRange" bind:value={$discount_percentage} on:change={set_discount_percentage}>
-                                                    <p class="PB-range-slidervalue">{$discount_percentage} %</p>
+                                                    <input type="range" step="5" min="5" max="90" class="PB-range-slider" id="myRange" bind:value={$updated_discount_percentage} on:change={set_updated_discount_percentage}>
+                                                    <p class="PB-range-slidervalue">{$updated_discount_percentage} %</p>
                                                 </div>
                                             </div>
                                         {/if}
@@ -650,13 +893,189 @@
                                         <div class="back_btn" on:click={toggle_discount_type_value_field}>
                                             <span>Back</span>
                                         </div>
-                                        <div class="save_btn">
-                                            <span>Save</span>
-                                        </div>
+                                        {#if submitting_discount}
+                                            <div class="save_btn" on:click={submit_updated_discount}>
+                                                <div class="loader">
+                                                    <div class="bar1"></div>
+                                                    <div class="bar2"></div>
+                                                    <div class="bar3"></div>
+                                                    <div class="bar4"></div>
+                                                    <div class="bar5"></div>
+                                                    <div class="bar6"></div>
+                                                    <div class="bar7"></div>
+                                                    <div class="bar8"></div>
+                                                    <div class="bar9"></div>
+                                                    <div class="bar10"></div>
+                                                    <div class="bar11"></div>
+                                                    <div class="bar12"></div>
+                                                </div>
+                                            </div>
+                                        {:else}
+                                            <div class="save_btn" on:click={submit_updated_discount}>
+                                                <span>Save</span>
+                                            </div>
+                                        {/if}
                                     </div>
                                 </div>
                             {/if}
                         </li>
+
+                        <!-- IMAGES -->
+                        <li class="campaign_list_item">
+                            {#if $show_product_images_field}
+                                <div class="list_item_content_wrapper" transition:slide={{ delay: 0, duration: 100, easing: quintOut, axis: 'x' }}>
+                                    <div class="list_item_content">
+                                        <h6 class="images_h6">Images</h6>
+                                        <div class="images_grid">
+                                            {#if stock_media.length > 0}
+                                                {#each stock_media as stock_image_obj}
+                                                    <div class="grid_item_wrapper">
+                                                        <img class="grid_item" src={stock_image_obj.url} alt={stock_image_obj.name} />
+                                                    </div>
+                                                {/each}
+                                            {/if}
+                                            {#if internal_media.length > 0}
+                                                {#each internal_media as image_obj}
+                                                    <div class="grid_item_wrapper">
+                                                        <img class="grid_item" src={`${PUBLIC_POCKETBASE_URL}/api/files/campaigns/${campaign_id}/${image_obj}`} />
+                                                    </div>
+                                                {/each}
+                                            {/if}
+                                        </div>
+                                    </div>
+                                    <div class="edit_icon" on:click={toggle_images_field}>
+                                        <img src="/images/edit.png" />
+                                    </div>
+                                </div>
+                            {/if}
+                            {#if $show_product_images_input}
+                                <div class="list_item_form_field_wrapper images_container" transition:slide={{ delay: 0, duration: 0, easing: quintOut, axis: 'x' }}>
+                                    <div class="image_uploader_field_wrapper">
+                                        <div class="image_uploader_wrapper">
+                                            <div class="image_uploader">
+                                                <input id="image_uploader_btn" type="file" on:input={update_selected_internal_storage_images} multiple />
+                                                <label for="image_uploader_btn" class="image_uploader_btn">
+                                                    <img class="upload_icon" src="/images/upload.png" alt="upload"/>
+                                                </label>
+                                            </div>
+                                            <div class="stock_image_btn" on:click={search_unsplash}>
+                                                <span>Stock<br/>images</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {#if $updated_internal_storage_images.length > 0 || $updated_stock_images.length > 0}
+                                    <div class="thumbnails_wrapper">
+                                        <div class="thumbnails_placeholder">
+                                            <div class="images_grid">
+                                                {#if $updated_stock_images.length > 0}
+                                                    {#each $updated_stock_images as stock_image_obj}
+                                                        <div class="grid_item_wrapper">
+                                                            <img class="grid_item" src={stock_image_obj.url} alt={stock_image_obj.name} />
+                                                        </div>
+                                                    {/each}
+                                                {/if}
+                                                {#if $updated_internal_storage_images.length > 0}
+                                                    {#each $updated_internal_storage_images as image_obj}
+                                                        <div class="grid_item_wrapper">
+                                                            <img class="grid_item" src={URL.createObjectURL(image_obj)} />
+                                                        </div>
+                                                    {/each}
+                                                {/if}
+                                            </div>
+                                        </div>
+                                        <div class="clear_btn" on:click={clear_images}>
+                                            <img src="/images/bin.png" alt="delete contents" />
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    {#if $updated_internal_storage_images.length == 0 && $updated_stock_images.length == 0}
+                                    <div class="thumbnails_wrapper">
+                                        <div class="thumbnails_placeholder">
+                                            <span>Selected images will show up here</span>
+                                        </div>
+                                        <div class="clear_btn" on:click={clear_images}>
+                                            <img src="/images/bin.png" alt="delete contents" />
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    <div class="main_edit_image_select_btns">
+                                        <div class="back_btn" on:click={toggle_images_field}>
+                                            <span>Back</span>
+                                        </div>
+                                        {#if submitting_images}
+                                            <div class="upload_btn" on:click={submit_updated_images}>
+                                                <div class="loader">
+                                                    <div class="bar1"></div>
+                                                    <div class="bar2"></div>
+                                                    <div class="bar3"></div>
+                                                    <div class="bar4"></div>
+                                                    <div class="bar5"></div>
+                                                    <div class="bar6"></div>
+                                                    <div class="bar7"></div>
+                                                    <div class="bar8"></div>
+                                                    <div class="bar9"></div>
+                                                    <div class="bar10"></div>
+                                                    <div class="bar11"></div>
+                                                    <div class="bar12"></div>
+                                                </div>
+                                            </div>
+                                        {:else}
+                                            <div class="upload_btn" on:click={$updated_stock_images.length > 0 || $updated_internal_storage_images.length > 0 ? submit_updated_images : ()=>{console.log('test')}}>
+                                                <span>Add images</span>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                    <!-- <div class="btns_wrapper">
+                                        <div class="back_btn" on:click={toggle_images_field}>
+                                            <span>Back</span>
+                                        </div>
+                                        {#if submitting_images}
+                                            <div class="save_btn" on:click={submit_updated_images}>
+                                                <div class="loader">
+                                                    <div class="bar1"></div>
+                                                    <div class="bar2"></div>
+                                                    <div class="bar3"></div>
+                                                    <div class="bar4"></div>
+                                                    <div class="bar5"></div>
+                                                    <div class="bar6"></div>
+                                                    <div class="bar7"></div>
+                                                    <div class="bar8"></div>
+                                                    <div class="bar9"></div>
+                                                    <div class="bar10"></div>
+                                                    <div class="bar11"></div>
+                                                    <div class="bar12"></div>
+                                                </div>
+                                            </div>
+                                        {:else}
+                                            <div class="save_btn" on:click={submit_updated_images}>
+                                                <span>Save</span>
+                                            </div>
+                                        {/if}
+                                    </div> -->
+                                </div>
+                            {/if}
+                            {#if $show_edit_stock_images}
+                                <div class="stock_image_select" transition:slide={{ delay: 250, duration: 300, easing: quintOut, axis: 'x' }}>
+                                    <div class="stock_image_select_inner">
+                                        {#each $edit_stock_images_array as stock_image}
+                                            <label for={stock_image.id} class="stock_image_item" >
+                                                <img class="stock_image" src={stock_image.url} alt={stock_image.name} />
+                                                <input id={stock_image.id} class="item_input" type="checkbox" bind bind:group={$updated_stock_images_ids} value={stock_image.id} on:change={set_updated_stock_images_list}/>
+                                                <div class="stock_image_overlay">
+                                                    <img src="/images/checkmark.png" />
+                                                </div>
+                                            </label>
+                                        {/each}
+                                    </div>
+                                </div>
+                                <div class="edit_stock_image_back_btn">
+                                    <div class="back_btn" on:click={back_to_image_input}>
+                                        <span>Back</span>
+                                    </div>
+                                </div>
+                            {/if}
+                        </li>
+                        
                     </ul>
                 </div>
             {/if}
