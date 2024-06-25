@@ -292,15 +292,16 @@
                 console.log(error)
                 submitting_images = false
             } finally {
-                try {
-                    const record = await pb.collection('campaigns').update(campaign_id, updated_campaign);
-                } catch (error) {
-                    console.log(error)
-                } finally {
-                    campaign_obj()
-                    submitting_images = false
-                    toggle_images_field()
-                }
+                // try {
+                //     const record = await pb.collection('campaigns').update(campaign_id, updated_campaign);
+                // } catch (error) {
+                //     console.log(error)
+                // } finally {
+                //     campaign_obj()
+                //     submitting_images = false
+                //     toggle_images_field()
+                // }
+                submitting_images = false
             }
         }
     }
