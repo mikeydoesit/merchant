@@ -3,8 +3,8 @@
 	import { quintOut } from 'svelte/easing';
     import { onMount } from 'svelte';
     import { createApi } from 'unsplash-js';
-    import { PUBLIC_POCKETBASE_URL, PUBLIC_UNSPLASH_ACCESS_KEY } from '$env/static/public';
-    import { show_campaign_action, show_campaign_action_main, show_campaign_action_edit, show_campaign_action_preview, show_campaign_action_delete, show_product_name_field, show_product_name_input, show_category_field, updated_product_service_name, show_updated_product_category_list, has_updated_product_category, selected_updated_product_category_to_display, show_category_input, show_original_price_field, show_original_price_input, updated_original_price, show_discount_type_value_field, show_discount_type_value_input, show_product_images_field, show_product_images_input, updated_internal_storage_images, show_edit_stock_images, edit_stock_images, edit_stock_images_array, updated_stock_images_ids, updated_stock_images, discount_type, discount_percentage, updated_discount_type, updated_discount_percentage } from '$lib/store.js'
+    import { PUBLIC_POCKETBASE_URL, PUBLIC_UNSPLASH_ACCESS_KEY, PUBLIC_CAMPAIGN_BASE_URL } from '$env/static/public';
+    import { show_active_campaigns, show_draft_campaigns, show_campaign_action, show_campaign_action_main, show_campaign_action_edit, show_campaign_action_preview, show_campaign_action_delete, show_product_name_field, show_product_name_input, show_category_field, updated_product_service_name, show_updated_product_category_list, has_updated_product_category, selected_updated_product_category_to_display, show_category_input, show_original_price_field, show_original_price_input, updated_original_price, show_discount_type_value_field, show_discount_type_value_input, show_product_images_field, show_product_images_input, updated_internal_storage_images, show_edit_stock_images, edit_stock_images, edit_stock_images_array, updated_stock_images_ids, updated_stock_images, discount_type, discount_percentage, updated_discount_type, updated_discount_percentage } from '$lib/store.js'
 
     export let sub_category_list = [];
     export let pb = {}
@@ -18,6 +18,7 @@
     let submitting_original_price = false
     let submitting_discount = false
     let submitting_images = false
+    let deleting_campaign = false
 
     const hide_element = () => {
         show_campaign_action.set(false)
@@ -27,7 +28,6 @@
     const campaign_obj = async () => {
         try {
             const current_campaign = await pb.collection('campaigns').getOne(campaign_id);
-            console.log(current_campaign)
             campaign = current_campaign
             stock_media = current_campaign.stock_images
             internal_media = current_campaign.images
@@ -59,6 +59,9 @@
         show_campaign_action_preview.set(false)
         show_campaign_action_delete.set(false)
         show_campaign_action_main.set(true) 
+    }
+    const go_to_live_view = () => {
+        window.location.assign(PUBLIC_CAMPAIGN_BASE_URL)
     }
 
     // EDIT FORM FIELD FUNCTIONS
@@ -240,7 +243,7 @@
         show_edit_stock_images.set(true)
         
         unsplash.search.getPhotos({
-            query: campaign.product_name,
+            query: campaign.sub_category,
             per_page: 30
         }).then(result => {
             if(result.type == 'success') {
@@ -276,31 +279,52 @@
 
             submitting_images = true
 
+            updated_campaign.delete('images')
             updated_campaign.set('stock_images', JSON.stringify($updated_stock_images));
         
             for (let file of $updated_internal_storage_images) {
                 updated_campaign.append('images', file);
             }
 
-            let images_field_reset = new FormData();
-
-            images_field_reset.set('images', '')
+            const images_field_reset = {
+                "images": null,
+                "stock_images": []
+            };
 
             try {
                 const reset = await pb.collection('campaigns').update(campaign_id, images_field_reset);
+
+                const record = await pb.collection('campaigns').update(reset.id, updated_campaign);
+                console.log(record)
             } catch (error) {
                 console.log(error)
                 submitting_images = false
             } finally {
-                try {
-                    const record = await pb.collection('campaigns').update(campaign_id, updated_campaign);
-                } catch (error) {
-                    console.log(error)
-                } finally {
-                    campaign_obj()
-                    submitting_images = false
-                    toggle_images_field()
-                }
+                campaign_obj()
+                submitting_images = false
+                toggle_images_field()
+                clear_images()
+            }
+        }
+    }
+    const delete_campaign = async () => {
+        if(!deleting_campaign) {
+
+            deleting_campaign = true
+
+            try {
+                const record = await pb.collection('campaigns').delete(campaign.id);
+                console.log(record)
+            } catch (error) {
+                console.log(error)
+                deleting_campaign = false
+            } finally {
+                campaign = {}
+                stock_media = []
+                internal_media = []
+                deleting_campaign = false
+                clear_images()
+                hide_element()
             }
         }
     }
@@ -316,22 +340,22 @@
     .campaign_action_menu_inner {
         @apply bg-main_bg h-auto max-h-[80vh] w-full rounded-t-3xl z-20 px-8 py-8 overflow-y-scroll;
     }
-    .campaign_action_menu_main, .campaign_action_menu_edit, .campaign_action_menu_preview {
+    .campaign_action_menu_main, .campaign_action_menu_edit, .campaign_action_menu_preview, .campaign_action_menu_delete {
         @apply h-auto w-full;
     }
-    .campaign_action_menu_header, .campaign_action_menu_edit_header {
+    .campaign_action_menu_header, .campaign_action_menu_edit_header, .campaign_action_menu_delete_header {
         @apply flex flex-row justify-between items-center mb-8;
     }
-    .campaign_action_menu_header h3, .campaign_action_menu_edit_header h3 {
+    .campaign_action_menu_header h3, .campaign_action_menu_edit_header h3, .campaign_action_menu_delete_header h3 {
         @apply text-2xl font-semibold;
     }
-    .campaign_action_menu_header .img_wrapper, .campaign_action_menu_edit_header .img_wrapper {
+    .campaign_action_menu_header .img_wrapper, .campaign_action_menu_edit_header .img_wrapper, .campaign_action_menu_delete_header .img_wrapper {
         @apply h-5 w-5 cursor-pointer;
     }
     .campaign_action_menu_content .link {
         @apply mb-6 font-semibold text-lg cursor-pointer;
     }
-    .campaign_action_menu_edit_content {
+    .campaign_action_menu_edit_content, .campaign_action_menu_delete_content {
         @apply flex flex-col gap-4;
     }
     .list_item_content_wrapper {
@@ -499,6 +523,15 @@
     .main_edit_image_select_btns .back_btn, .main_edit_image_select_btns .upload_btn {
         @apply w-1/2 bg-accent_bg flex justify-center items-center text-main_bg font-semibold py-3 rounded-lg cursor-pointer hover:bg-accent_bg/80;
     }
+    .campaign_action_menu_delete_confirmation {
+        @apply flex w-full;
+    }
+    .confirmation_btn {
+        @apply flex justify-center items-center bg-highlight_bg w-full py-2.5 px-1 rounded-md cursor-pointer;
+    }
+    .confirmation_btn span {
+        @apply text-main_bg font-medium;
+    }
 
 
     /* discount styling */
@@ -661,12 +694,19 @@
                         </div>
                     </div>
                     <div class="campaign_action_menu_content">
-                        <div class="edit_btn link" on:click={toggle_edit_form}>
-                            <span>Edit</span>
-                        </div>
-                        <div class="preview_btn link" on:click={toggle_preview_view}>
-                            <span>Preview</span>
-                        </div>
+                        {#if $show_draft_campaigns}
+                            <div class="edit_btn link" on:click={toggle_edit_form}>
+                                <span>Edit</span>
+                            </div>
+                            <div class="preview_btn link" on:click={toggle_preview_view}>
+                                <span>Preview</span>
+                            </div>
+                        {/if}
+                        {#if $show_active_campaigns}
+                            <div class="preview_btn link" on:click={go_to_live_view}>
+                                <span>View</span>
+                            </div>
+                        {/if}
                         <div class="delete_btn link" on:click={toggle_delete_confirm}>
                             <span>Delete</span>
                         </div>
@@ -1082,6 +1122,45 @@
             {#if $show_campaign_action_preview}
                 <div class="campaign_action_menu_preview">
                     
+                </div>
+            {/if}
+            {#if $show_campaign_action_delete}
+                <div class="campaign_action_menu_delete">
+                    <div class="campaign_action_menu_delete_header">
+                        <h3>Delete campaign</h3>
+                        <div class="img_wrapper" on:click={back_to_action_main}>
+                            <img src="/images/close.png" alt="icon" />
+                        </div>
+                    </div>
+                    <div class="campaign_action_menu_delete_content">
+                        <div class="campaign_action_menu_delete_warning">
+                            <p>This action <strong>CANNOT</strong> be undone.  This will permanently delete the campaign.</p>
+                        </div>
+                        <div class="campaign_action_menu_delete_confirmation">
+                            {#if deleting_campaign}
+                                <div class="confirmation_btn" on:click={delete_campaign}>
+                                    <div class="loader">
+                                        <div class="bar1"></div>
+                                        <div class="bar2"></div>
+                                        <div class="bar3"></div>
+                                        <div class="bar4"></div>
+                                        <div class="bar5"></div>
+                                        <div class="bar6"></div>
+                                        <div class="bar7"></div>
+                                        <div class="bar8"></div>
+                                        <div class="bar9"></div>
+                                        <div class="bar10"></div>
+                                        <div class="bar11"></div>
+                                        <div class="bar12"></div>
+                                    </div>
+                                </div>
+                            {:else}
+                                <div class="confirmation_btn" on:click={delete_campaign}>
+                                    <span>I understand, delete this campaign</span>
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
                 </div>
             {/if}
         </div>
