@@ -313,7 +313,7 @@
             deleting_campaign = true
 
             try {
-                const record = await pb.collection('campaigns').delete(campaign.id);
+                const record = await pb.collection('campaigns').delete(campaign_id);
                 console.log(record)
             } catch (error) {
                 console.log(error)
