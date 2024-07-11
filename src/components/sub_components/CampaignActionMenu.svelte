@@ -324,7 +324,7 @@
                 internal_media = []
                 deleting_campaign = false
                 clear_images()
-                hide_element()
+                back_to_action_main()
             }
         }
     }
