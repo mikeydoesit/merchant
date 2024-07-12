@@ -324,7 +324,11 @@
                 internal_media = []
                 deleting_campaign = false
                 clear_images()
-                back_to_action_main()
+                show_active_campaigns.set(!$show_active_campaigns)
+                show_draft_campaigns.set(!$show_draft_campaigns)
+                hide_element()
+                show_active_campaigns.set(!$show_active_campaigns)
+                show_draft_campaigns.set(!$show_draft_campaigns)
             }
         }
     }
