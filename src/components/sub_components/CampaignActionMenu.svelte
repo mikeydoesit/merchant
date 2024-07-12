@@ -324,8 +324,8 @@
                 internal_media = []
                 deleting_campaign = false
                 clear_images()
-                console.log(!$show_active_campaigns)
-                console.log(!$show_draft_campaigns)
+                show_active_campaigns.set(!$show_active_campaigns)
+                show_draft_campaigns.set(!$show_draft_campaigns)
                 show_active_campaigns.set(!$show_active_campaigns)
                 show_draft_campaigns.set(!$show_draft_campaigns)
                 hide_element()
