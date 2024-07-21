@@ -326,8 +326,10 @@
                 clear_images()
                 show_active_campaigns.set(!$show_active_campaigns)
                 show_draft_campaigns.set(!$show_draft_campaigns)
-                show_active_campaigns.set(!$show_active_campaigns)
-                show_draft_campaigns.set(!$show_draft_campaigns)
+                setTimeout(() => {
+                    show_active_campaigns.set(!$show_active_campaigns)
+                    show_draft_campaigns.set(!$show_draft_campaigns)
+                }, 2000)
                 hide_element()
             }
         }
