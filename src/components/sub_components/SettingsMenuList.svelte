@@ -1,5 +1,12 @@
-<style lang="postcss">
+<script>
+    import { show_business_profile, show_settings_menu } from '$lib/store.js'
     
+    const go_to_business_profile = () => {
+        show_settings_menu.set(false)
+        show_business_profile.set(true)
+    }
+</script>
+<style lang="postcss">
     .list_item {
         @apply px-7 flex flex-row justify-between items-center py-6 border-t border-border_grey;
     }
@@ -25,21 +32,21 @@
 
 <section class="settings_menu_list">
     <ul class="menu_list">
-        <li class="list_item">
+        <!-- <li class="list_item">
             <div class="left_col">
                 <h5 class="list_item_title">Account</h5>
             </div>
-        </li>
-        <li class="list_item">
+        </li> -->
+        <li class="list_item" on:click={go_to_business_profile}>
             <div class="left_col">
                 <h5 class="list_item_title">Business Profile</h5>
             </div>
         </li>
-        <li class="list_item">
+        <!-- <li class="list_item">
             <div class="left_col">
                 <h5 class="list_item_title">About</h5>
             </div>
-        </li>
+        </li> -->
         <li class="list_item">
             <div class="left_col">
                 <h5 class="list_item_title">Dark mode: Off</h5>

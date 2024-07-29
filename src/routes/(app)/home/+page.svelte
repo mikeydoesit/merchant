@@ -10,9 +10,10 @@
     import Homepage from "../../../components/Homepage.svelte";
     import MoreComponent from "../../../components/MoreComponent.svelte";
     import SettingsMenu from "../../../components/SettingsMenu.svelte";
-    import { show_homepage, show_more_component, show_settings_menu, show_campaigns_menu, show_add_campaign } from '$lib/store.js';
+    import { show_homepage, show_more_component, show_settings_menu, show_campaigns_menu, show_add_campaign, show_business_profile } from '$lib/store.js';
 	import CampaignsMenu from "../../../components/CampaignsMenu.svelte";
     import AddCampaignPage from '../../../components/AddCampaignPage.svelte';
+    import BusinessProfile from '../../../components/BusinessProfile.svelte';
 
     if(!$currentUser?.verified) {
         goto('/auth')
@@ -40,5 +41,8 @@
     {/if}
     {#if $show_add_campaign}
         <AddCampaignPage />
+    {/if}
+    {#if $show_business_profile}
+        <BusinessProfile />
     {/if}
 </main>

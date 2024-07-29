@@ -1,5 +1,5 @@
 <script>
-    import { email } from '$lib/store.js'
+    import { show_login_form, show_register_form, show_registration_success, show_password_reset_form, email } from '$lib/store.js'
     let show_email_login_error = false;
     let submitting_password_reset = false;
     export let pb;

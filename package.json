@@ -29,6 +29,7 @@
 	"dependencies": {
 		"masonry-layout": "^4.2.2",
 		"pocketbase": "^0.21.2",
+		"svelte-imask": "^1.2.0",
 		"unsplash-js": "^7.0.19"
 	}
 }

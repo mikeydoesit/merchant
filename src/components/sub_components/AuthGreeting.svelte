@@ -1,6 +1,7 @@
 <script>
     export let title;
     export let subtitle;
+    import { show_password_reset_form } from '$lib/store.js'
 </script>
 
 <style lang="postcss">
@@ -16,6 +17,6 @@
 </style>
 
 <section class="auth_greeting">
-    <h3>{title} &#128075;</h3>
+    <h3>{title} {#if $show_password_reset_form } {:else}&#128075;{/if}</h3>
     <p>{subtitle}</p>
 </section>

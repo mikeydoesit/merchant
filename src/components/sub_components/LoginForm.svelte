@@ -1,6 +1,6 @@
 <script>
     import { goto } from '$app/navigation'
-    import { show_login_form, show_register_form, email, password, show_registration_success } from '$lib/store.js'
+    import { show_login_form, show_register_form, email, password, show_registration_success, show_password_reset_form } from '$lib/store.js'
     let show_email_login_error = false;
     let show_password_login_error =  false;
     export let pb;
@@ -15,6 +15,12 @@
     const go_to_register_form = () => {
         show_login_form.set(false)
         show_register_form.set(true)
+    }
+    const go_to_password_reset_form = () => {
+        show_login_form.set(false)
+        show_register_form.set(false)
+        show_registration_success.set(false)
+        show_password_reset_form.set(true)
     }
     const set_email = (e) => {
         email.set(e.target.value)
@@ -73,8 +79,14 @@
     .email_login_error, .password_login_error {
         @apply mt-2 border border-red bg-red/10 rounded-md px-4 py-2.5;
     }
-    .email_error_text, .password_error_text {
+    .email_login_error_text, .password_login_error_text {
         @apply text-red text-sm;
+    }
+    .password_reset_wrapper {
+        @apply w-full flex flex-row justify-end mt-1.5 pr-1;
+    }
+    .password_reset_wrapper span {
+        @apply text-sm font-semibold cursor-pointer text-red/70;
     }
     .form_item.submit_btn {
         @apply bg-accent_bg py-4 rounded-md text-white font-bold text-lg cursor-pointer flex justify-center items-center;
@@ -234,6 +246,9 @@
                 <span class="password_login_error_text">This password is incorrect</span>
             </div>
         {/if}
+        <div class="password_reset_wrapper" on:click={go_to_password_reset_form}>
+            <span>Forgot password</span>
+        </div>
     </div>
 
 

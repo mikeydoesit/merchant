@@ -5,9 +5,11 @@ export const show_more_component = writable(false);
 export const show_settings_menu = writable(false);
 export const show_campaigns_menu = writable(false);
 export const show_add_campaign = writable(false);
+export const show_business_profile = writable(false);
 export const show_active_campaigns = writable(false);
 export const show_draft_campaigns = writable(true);
 export const show_campaign_action = writable(false);
+export const show_business_profile_action = writable(false)
 
 export const show_campaign_action_main = writable(true)
 export const show_campaign_action_edit = writable(false)
@@ -95,3 +97,19 @@ export const edit_stock_images_array = writable([])
 export const updated_stock_images_ids = writable([])
 export const updated_stock_images = writable([])
 export const show_edit_stock_images = writable(false)
+
+// Business profile edit
+
+export const show_logo_edit = writable(false)
+export const show_business_name_edit = writable(false)
+export const show_business_registration_edit = writable(false)
+export const show_contact_number_edit = writable(false)
+export const show_location_edit = writable(false)
+export const show_opening_hours_edit = writable(false)
+
+export const logo_url = writable('')
+export const logo_name = writable('')
+export const business_name_edit = writable('')
+export const business_registration_edit = writable('')
+export const contact_number_edit = writable('')
+export const location_edit = writable('')

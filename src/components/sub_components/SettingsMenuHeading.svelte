@@ -1,17 +1,13 @@
 <script>
-    import { show_more_component, show_settings_menu } from '$lib/store.js';
     export let page_title = '';
     export let back_btn;
+    export let back_to_prev
 
-    const back_to_prev = () => {
-        show_settings_menu.set(false);
-        show_more_component.set(true);
-    }
 </script>
 
 <style lang="postcss">
     .settings_menu_heading {
-        @apply flex justify-center py-5 relative items-center;
+        @apply flex justify-center py-5 relative items-center bg-main_bg;
     }
     .settings_menu_heading h1 {
         @apply text-black text-2xl font-bold;
