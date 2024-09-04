@@ -2,21 +2,77 @@
     import { imask } from 'svelte-imask';
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-    import { show_business_profile, show_business_profile_action, show_logo_edit, show_business_name_edit, show_business_registration_edit, show_contact_number_edit, show_location_edit, show_opening_hours_edit, logo_url, logo_name, business_name_edit, business_registration_edit, contact_number_edit, location_edit } from '$lib/store.js'
+    import { show_business_profile, show_business_profile_action, show_logo_edit, show_business_name_edit, show_business_registration_edit, show_contact_number_edit, show_location_edit, show_opening_hours_edit, logo_url, logo_name, business_name_edit, business_registration_edit, contact_number_edit, location_edit, opening_hour, closing_hour } from '$lib/store.js'
 
     export let pb;
     export let merchant;
     export let locations;
+
+    // const opening_times = [
+    //     {
+    //         "Monday": {
+    //             "open": "8 am",
+    //             "close": "5 pm"
+    //         }
+    //     },
+    //     {
+    //         "Tuesday": {
+    //             "open": "8 am",
+    //             "close": "5 pm"
+    //         }
+    //     },
+    //     {
+    //         "Wednesday": {
+    //             "open": "8 am",
+    //             "close": "5 pm"
+    //         }
+    //     },
+    //     {
+    //         "Thursday": {
+    //             "open": "8 am",
+    //             "close": "5 pm"
+    //         }
+    //     },
+    //     {
+    //         "Friday": {
+    //             "open": "8 am",
+    //             "close": "5 pm"
+    //         }
+    //     },
+    //     {
+    //         "Saturday": {
+    //             "open": "8 am",
+    //             "close": "5 pm"
+    //         }
+    //     },
+    //     {
+    //         "Sunday": {
+    //             "open": "8 am",
+    //             "close": "5 pm"
+    //         }
+    //     }
+    // ]
 
     let submitting_logo = false;
     let submitting_business_name = false;
     let submitting_business_registration = false;
     let submitting_contact_number = false;
     let submitting_location = false;
+    let submitting_opening_hours = false;
 
     let show_business_name_error = false;
     let show_business_registration_error = false;
     let logo_input;
+    let all_hours;
+    let first_hours = [];
+    let second_hours = [];
+    let monday;
+    let tuesday;
+    let wednesday;
+    let thursday;
+    let friday;
+    let saturday;
+    let sunday;
 
     const formData = new FormData();
 
@@ -161,6 +217,11 @@
         }
         submitting_location = false
     }
+
+    const submit_opening_hours = () => {
+        console.log(first_hours)
+        console.log(second_hours)
+    }
 </script>
 
 <style lang="postcss">
@@ -176,7 +237,7 @@
     .form_item {
         @apply relative;
     }
-    #logo_input, #logo_change_input, .location_list_item_input {
+    #logo_input, #logo_change_input, .location_list_item_input, .all_hours_input, .day_select_input {
         @apply w-0 h-0 opacity-0 absolute;
     }
     .logo_input_btn_wrapper {
@@ -211,6 +272,85 @@
         @apply block py-4 pl-4 hover:bg-border_grey_two focus:bg-border_grey_two;
     }
 
+    .all_hours_select_component {
+        @apply flex flex-row justify-between items-center mb-10;
+    }
+    .all_hours_label {
+        @apply text-black font-bold text-lg;
+    }
+    .all_hours_input_wrapper {
+        @apply flex flex-row border-2 border-accent_bg rounded-md;
+    }
+    .all_hours_input_item {
+        @apply px-6 py-1 cursor-pointer relative;
+    }
+    .all_hours_input_item_label {
+        @apply text-accent_bg font-semibold;
+    }
+    .all_hours_cell_bg {
+        @apply h-full w-full absolute -z-10 top-0 left-0 right-0 bottom-0;
+    }
+    .all_hours_input:checked ~ label {
+        @apply text-main_bg;
+    }
+    .all_hours_input:checked + .all_hours_cell_bg {
+        @apply bg-accent_bg;
+    }
+
+    .days_selector_component {
+        @apply mb-10;
+    }
+    .days_grid {
+        @apply flex flex-row justify-between;
+    }
+    .day {
+        @apply flex flex-col justify-center items-center;
+    }
+    .day_tag {
+        @apply mt-2 text-xs font-bold text-border_grey_four ;
+    }
+    .day_wrapper {
+        @apply relative border-2 border-accent_bg/60 rounded-full cursor-pointer p-1.5;
+    }
+    .day_select_input_label {
+        @apply text-accent_bg font-semibold;
+    }
+    .day_select_input_label img {
+        @apply h-4 w-4;
+    }
+    .day_select_cell_bg {
+        @apply h-full w-full absolute -z-10 top-0 left-0 right-0 bottom-0 rounded-full;
+    }
+    .day_select_input:checked ~ label {
+        @apply text-main_bg;
+    }
+    .day_select_input:checked + .day_select_cell_bg {
+        @apply bg-accent_bg/90;
+    }
+    .hours_section {
+        @apply w-full flex flex-row mt-6;
+    }
+    .opening_hour_wrapper {
+        @apply border-r border-border_grey;                                                                                          
+    }
+    .opening_hour_wrapper, .closing_hour_wrapper {
+        @apply w-1/2 flex flex-row justify-center items-center;
+    }
+    .dropdown_icon {
+        @apply ml-4 mt-4;
+    }
+    .dropdown_icon img {
+        @apply h-4;
+    }
+    .hour {
+        @apply flex flex-col items-center;
+    }
+    .hour .title {
+        @apply text-xs font-semibold text-border_grey_four;
+    }
+    .hour h6 {
+        @apply font-semibold text-2xl text-black mt-0.5;
+    }
     /* Button loader */
 
     .loader {
@@ -493,6 +633,323 @@
                         </div>
                     </div>
                 {/if}
+                <!-- {#if $show_opening_hours_edit}
+                <div class="opening_hours_wrapper">
+                    <div class="all_hours_select_component">
+                        <div class="all_hours_label">
+                            <span>Open 24/7</span>
+                        </div>
+                        <div class="all_hours_input_wrapper">
+                            <div class="all_hours_input_item">
+                                <input id="all_hours_yes" class="all_hours_input" value="Yes" type="radio" name="all_hours" bind:group={all_hours} />
+                                <div class="all_hours_cell_bg"></div>
+                                <label for="all_hours_yes" class="all_hours_input_item_label">
+                                    <span>Yes</span>
+                                </label>
+                            </div>
+                            <div class="all_hours_input_item">
+                                <input id="all_hours_no" class="all_hours_input" value="No" type="radio" name="all_hours" bind:group={all_hours} checked/>
+                                <div class="all_hours_cell_bg"></div>
+                                <label for="all_hours_no" class="all_hours_input_item_label">
+                                    <span>No</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="days_selector_component">
+                        <div class="days_grid">
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Monday" class="day_select_input" value="Mon" type="checkbox" name="first_hours" bind:group={first_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Monday" class="day_select_input_label">
+                                        {#if first_hours.includes('Mon')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Mon</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Tuesday" class="day_select_input" value="Tue" type="checkbox" name="first_hours" bind:group={first_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Tuesday" class="day_select_input_label">
+                                        {#if first_hours.includes('Tue')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Tue</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Wednesday" class="day_select_input" value="Wed" type="checkbox" name="first_hours" bind:group={first_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Wednesday" class="day_select_input_label">
+                                        {#if first_hours.includes('Wed')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Wed</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Thursday" class="day_select_input" value="Thur" type="checkbox" name="first_hours" bind:group={first_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Thursday" class="day_select_input_label">
+                                        {#if first_hours.includes('Thur')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Thu</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Friday" class="day_select_input" value="Fri" type="checkbox" name="first_hours" bind:group={first_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Friday" class="day_select_input_label">
+                                        {#if first_hours.includes('Fri')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Fri</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Saturday" class="day_select_input" value="Sat" type="checkbox" name="first_hours" bind:group={first_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Saturday" class="day_select_input_label">
+                                        {#if first_hours.includes('Sat')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Sat</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Sunday" class="day_select_input" value="Sun" type="checkbox" name="first_hours" bind:group={first_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Sunday" class="day_select_input_label">
+                                        {#if first_hours.includes('Sun')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Sun</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hours_section">
+                            <div class="opening_hour_wrapper">
+                                <div class="hour">
+                                    <p class="title">Opens</p>
+                                    <h6>{$opening_hour}</h6>
+                                </div>
+                                <div class="dropdown_icon">
+                                    <img src="/images/sort.png" alt="dropdown" />
+                                </div>
+                            </div>
+                            <div class="closing_hour_wrapper">
+                                <div class="hour">
+                                    <p class="title">Closes</p>
+                                    <h6>{$closing_hour}</h6>
+                                </div>
+                                <div class="dropdown_icon">
+                                    <img src="/images/sort.png" alt="dropdown" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="days_selector_component">
+                        <div class="days_grid">
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Monday_second_hours" class="day_select_input" value="Mon" type="checkbox" name="second_hours" bind:group={second_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Monday_second_hours" class="day_select_input_label">
+                                        {#if second_hours.includes('Mon')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Mon</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Tuesday_second_hours" class="day_select_input" value="Tue" type="checkbox" name="second_hours" bind:group={second_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Tuesday_second_hours" class="day_select_input_label">
+                                        {#if second_hours.includes('Tue')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Tue</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Wednesday_second_hours" class="day_select_input" value="Wed" type="checkbox" name="second_hours" bind:group={second_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Wednesday_second_hours" class="day_select_input_label">
+                                        {#if second_hours.includes('Wed')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Wed</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Thursday_second_hours" class="day_select_input" value="Thur" type="checkbox" name="second_hours" bind:group={second_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Thursday_second_hours" class="day_select_input_label">
+                                        {#if second_hours.includes('Thur')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Thu</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Friday_second_hours" class="day_select_input" value="Fri" type="checkbox" name="second_hours" bind:group={second_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Friday_second_hours" class="day_select_input_label">
+                                        {#if second_hours.includes('Fri')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Fri</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Saturday_second_hours" class="day_select_input" value="Sat" type="checkbox" name="second_hours" bind:group={second_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Saturday_second_hours" class="day_select_input_label">
+                                        {#if second_hours.includes('Sat')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Sat</p>
+                                </div>
+                            </div>
+                            <div class="day">
+                                <div class="day_wrapper">
+                                    <input id="Sunday_second_hours" class="day_select_input" value="Sun" type="checkbox" name="second_hours" bind:group={second_hours} />
+                                    <div class="day_select_cell_bg"></div>
+                                    <label for="Sunday_second_hours" class="day_select_input_label">
+                                        {#if second_hours.includes('Sun')}
+                                            <img src="/images/white_check.png" alt="checkmark" />
+                                        {:else}
+                                            <img src="/images/white_check.png" alt="checkmark" class="opacity-0"/>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="day_tag">
+                                    <p>Sun</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hours_section">
+                            <div class="opening_hour_wrapper">
+                                <div class="hour">
+                                    <p class="title">Opens</p>
+                                    <h6>{$opening_hour}</h6>
+                                </div>
+                                <div class="dropdown_icon">
+                                    <img src="/images/sort.png" alt="dropdown" />
+                                </div>
+                            </div>
+                            <div class="closing_hour_wrapper">
+                                <div class="hour">
+                                    <p class="title">Closes</p>
+                                    <h6>{$closing_hour}</h6>
+                                </div>
+                                <div class="dropdown_icon">
+                                    <img src="/images/sort.png" alt="dropdown" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn bg-accent_bg submit_btn" on:click={submit_opening_hours}>
+                        {#if submitting_opening_hours}
+                            <div class="loader">
+                                <div class="bar1"></div>
+                                <div class="bar2"></div>
+                                <div class="bar3"></div>
+                                <div class="bar4"></div>
+                                <div class="bar5"></div>
+                                <div class="bar6"></div>
+                                <div class="bar7"></div>
+                                <div class="bar8"></div>
+                                <div class="bar9"></div>
+                                <div class="bar10"></div>
+                                <div class="bar11"></div>
+                                <div class="bar12"></div>
+                            </div>
+                        {:else}
+                            <span>Save</span>
+                        {/if}
+                    </div>
+                </div>
+                {/if} -->
             </form>
         </div>
     </div>

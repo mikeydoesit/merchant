@@ -23,6 +23,10 @@
         show_business_profile_action.set(true)
         show_location_edit.set(true)
     }
+    const toggle_opening_hours = () => {
+        show_business_profile_action.set(true)
+        show_opening_hours_edit.set(true)
+    }
     console.log(merchant)
 </script>
 <style lang="postcss">
@@ -105,10 +109,10 @@
                 <p>{merchant.location}</p>
             </div>
         </li>
-        <li class="list_item">
+        <!-- <li class="list_item" on:click={toggle_opening_hours}>
             <div class="left_col">
                 <h5 class="list_item_title">Opening hours</h5>
             </div>
-        </li>
+        </li> -->
     </ul>
 </section>

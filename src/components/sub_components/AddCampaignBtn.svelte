@@ -1,3 +1,14 @@
+<script>
+    import { show_homepage, show_more_component, show_campaigns_menu, show_add_campaign } from '$lib/store.js'
+
+    const go_to_add_campaign = () => {
+        show_homepage.set(false)
+        show_more_component.set(false)
+        show_campaigns_menu.set(false)
+        show_add_campaign.set(true)
+    }
+</script>
+
 <style lang="postcss">
     .add_campaign_btn {
         @apply px-4 mt-4;
@@ -20,7 +31,7 @@
 </style>
 
 <section class="add_campaign_btn">
-    <div class="add_campaign_btn_inner">
+    <div class="add_campaign_btn_inner" on:click={go_to_add_campaign}>
         <div class="img_wrapper">
             <img src="/images/add.png" alt="icon" />
         </div>

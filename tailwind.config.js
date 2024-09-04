@@ -23,6 +23,7 @@ export default {
       transparent: 'transparent'
     },
     gridTemplateColumns: {
+      'days': '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
       'stock_images': 'repeat(2, minmax(0, 1fr))',
       'tapbarmenu': '1fr 1fr',
       'filter_btns': 'auto auto 1fr 1fr',

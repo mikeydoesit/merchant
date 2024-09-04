@@ -1,6 +1,12 @@
+<script>
+    import CampaignPreviewWide from "./CampaignPreviewWide.svelte";
+    import { pocketbase, currentUser } from "$lib/pocketbase";
+    console.log($currentUser)
+</script>
+
 <style lang="postcss">
     .campaign_list {
-        @apply px-4 mt-4 flex flex-col gap-4;
+        @apply flex flex-col;
     }
     .campaign {
         @apply border border-border_grey p-3 flex flex-row rounded-md;
@@ -20,8 +26,7 @@
 </style>
 
 <section class="campaign_list">
-    {#each Array(5) as _}
-        <div class="campaign">
+        <!-- <div class="campaign">
             <div class="img_wrapper">
                 <img src="/images/add.png" alt="icon" />
             </div>
@@ -29,6 +34,9 @@
                 <h5>Click here to add a new campaign</h5>
                 <p>Get started</p>
             </div>
-        </div>
-    {/each}
+        </div> -->
+        <CampaignPreviewWide
+            pb={pocketbase}
+            merchant={$currentUser}
+        />
 </section>
