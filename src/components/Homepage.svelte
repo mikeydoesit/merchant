@@ -3,6 +3,7 @@
     import Greeting from './sub_components/Greeting.svelte';
     import AddCampaignBtn from './sub_components/AddCampaignBtn.svelte';
     import SectionTitle from './sub_components/SectionTitle.svelte';
+    import Redemption from './sub_components/Redemption.svelte';
     import SubmittedCampaign from './sub_components/SubmittedCampaign.svelte';
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
@@ -22,6 +23,10 @@
         merchant={$currentUser.business_name}
     />
     <AddCampaignBtn />
+    <SectionTitle 
+        title={'Redemption Code'}
+    />
+    <Redemption/>
     <SectionTitle 
         title={'Submitted Campaigns'}
     />

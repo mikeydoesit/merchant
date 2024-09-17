@@ -1,7 +1,6 @@
 <script>
     import CampaignPreviewWide from "./CampaignPreviewWide.svelte";
     import { pocketbase, currentUser } from "$lib/pocketbase";
-    console.log($currentUser)
 </script>
 
 <style lang="postcss">
@@ -26,17 +25,8 @@
 </style>
 
 <section class="campaign_list">
-        <!-- <div class="campaign">
-            <div class="img_wrapper">
-                <img src="/images/add.png" alt="icon" />
-            </div>
-            <div class="add_btn_text">
-                <h5>Click here to add a new campaign</h5>
-                <p>Get started</p>
-            </div>
-        </div> -->
-        <CampaignPreviewWide
-            pb={pocketbase}
-            merchant={$currentUser}
-        />
+    <CampaignPreviewWide
+        pb={pocketbase}
+        merchant={$currentUser}
+    />
 </section>
