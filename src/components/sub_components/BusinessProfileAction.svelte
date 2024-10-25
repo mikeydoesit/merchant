@@ -2,7 +2,7 @@
     import { imask } from 'svelte-imask';
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-    import { show_business_profile, show_business_profile_action, show_logo_edit, show_business_name_edit, show_business_registration_edit, show_contact_number_edit, show_location_edit, show_opening_hours_edit, logo_url, logo_name, business_name_edit, business_registration_edit, contact_number_edit, location_edit, opening_hour, closing_hour } from '$lib/store.js'
+    import { show_business_profile, show_business_profile_action, show_logo_edit, show_business_name_edit, show_business_desc_edit, show_business_registration_edit, show_contact_number_edit, show_location_edit, show_opening_hours_edit, logo_url, logo_name, business_name_edit, business_desc_edit, business_registration_edit, contact_number_edit, location_edit, opening_hour, closing_hour } from '$lib/store.js'
 
     export let pb;
     export let merchant;
@@ -55,12 +55,14 @@
 
     let submitting_logo = false;
     let submitting_business_name = false;
+    let submitting_business_desc = false;
     let submitting_business_registration = false;
     let submitting_contact_number = false;
     let submitting_location = false;
     let submitting_opening_hours = false;
 
     let show_business_name_error = false;
+    let show_business_desc_error = false;
     let show_business_registration_error = false;
     let logo_input;
     let all_hours;
@@ -85,6 +87,7 @@
         show_business_profile_action.set(false)
         show_logo_edit.set(false)
         show_business_name_edit.set(false)
+        show_business_desc_edit.set(false)
         show_business_registration_edit.set(false)
         show_contact_number_edit.set(false)
         show_location_edit.set(false)
@@ -132,6 +135,29 @@
         } finally {
             submitting_business_name = false
             show_business_name_edit.set(false)
+            show_business_profile_action.set(false)
+            show_business_profile.set(false)
+        }
+        setTimeout(() => {
+            show_business_profile.set(true)
+        }, 2000)
+    }
+    const set_business_desc = (e) => {
+        business_desc_edit.set(e.target.value)
+    }
+    const submit_business_desc = async () => {
+
+        submitting_business_desc = true
+
+        formData.append('business_desc', $business_desc_edit)
+
+        try {
+            const record_business_desc = await pb.collection('merchants').update(merchant.id, formData);
+        } catch (error) {
+            console.log(error)
+        } finally {
+            submitting_business_desc = false
+            show_business_desc_edit.set(false)
             show_business_profile_action.set(false)
             show_business_profile.set(false)
         }
@@ -255,7 +281,7 @@
     .btn_wrapper .btn {
         @apply rounded-lg text-main_bg w-1/2 flex flex-row justify-center items-center py-2.5 cursor-pointer font-semibold;
     }
-    .form_item #business_name, .form_item #business_registration, .form_item #contact_number {
+    .form_item #business_name, .form_item #business_desc, .form_item #business_registration, .form_item #contact_number {
         @apply border-2 border-border_grey py-3 px-4 rounded-md w-full focus:outline-accent_bg;
     }
     .location_list {
@@ -506,6 +532,37 @@
                     </div>
                     <div class="btn bg-accent_bg submit_btn" on:click={submit_business_name}>
                         {#if submitting_business_name}
+                            <div class="loader">
+                                <div class="bar1"></div>
+                                <div class="bar2"></div>
+                                <div class="bar3"></div>
+                                <div class="bar4"></div>
+                                <div class="bar5"></div>
+                                <div class="bar6"></div>
+                                <div class="bar7"></div>
+                                <div class="bar8"></div>
+                                <div class="bar9"></div>
+                                <div class="bar10"></div>
+                                <div class="bar11"></div>
+                                <div class="bar12"></div>
+                            </div>
+                        {:else}
+                            <span>Save</span>
+                        {/if}
+                    </div>
+                {/if}
+                {#if $show_business_desc_edit}
+                    <div class="form_item">
+                        <label for="business_desc">Business description</label>
+                        <textarea id="business_desc" on:input={set_business_desc} row="5"></textarea>
+                        {#if show_business_desc_error}
+                            <div class="business_desc_error">
+                                <span class="business_desc_error_text">Looks like you haven't entered a description.</span>
+                            </div>
+                        {/if}
+                    </div>
+                    <div class="btn bg-accent_bg submit_btn" on:click={submit_business_desc}>
+                        {#if submitting_business_desc}
                             <div class="loader">
                                 <div class="bar1"></div>
                                 <div class="bar2"></div>

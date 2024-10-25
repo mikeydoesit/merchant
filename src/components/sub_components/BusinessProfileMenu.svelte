@@ -1,6 +1,6 @@
 <script>
     import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
-    import { show_business_profile_action, show_logo_edit, show_business_name_edit, show_business_registration_edit, show_contact_number_edit, show_location_edit, show_opening_hours_edit } from '$lib/store.js'
+    import { show_business_profile_action, show_logo_edit, show_business_name_edit, show_business_desc_edit, show_business_registration_edit, show_contact_number_edit, show_location_edit, show_opening_hours_edit } from '$lib/store.js'
     export let merchant;
 
     const toggle_logo_action = () => {
@@ -10,6 +10,10 @@
     const toggle_business_name_action = () => {
         show_business_profile_action.set(true)
         show_business_name_edit.set(true)
+    }
+    const toggle_business_desc = () => {
+        show_business_profile_action.set(true)
+        show_business_desc_edit.set(true)
     }
     const toggle_business_registration = () => {
         show_business_profile_action.set(true)
@@ -51,7 +55,7 @@
         @apply mr-5;
     }
     .list_item_title {
-        @apply text-xl text-black font-semibold;
+        @apply text-xl text-black font-semibold mb-1.5;
     }
     .right_col {
         @apply flex items-center justify-center;
@@ -84,6 +88,16 @@
             <div class="left_col">
                 <h5 class="list_item_title">Business name</h5>
                 <p>{merchant.business_name}</p>
+            </div>
+        </li>
+        <li class="list_item" on:click={toggle_business_desc}>
+            <div class="left_col">
+                <h5 class="list_item_title">Description</h5>
+                {#if merchant.business_desc}
+                    <p class="text-justify">{merchant.business_desc.slice(0, 100)} ...</p>
+                {:else}
+                    <p><i>No description saved!</i></p>
+                {/if}
             </div>
         </li>
         <li class="list_item" on:click={toggle_business_registration}>
