@@ -10,7 +10,6 @@
         show_add_campaign.set(false)
         show_campaigns_menu.set(true)
     }
-    console.log($currentUser)
 </script>
 
 <style lang="postcss">

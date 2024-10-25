@@ -612,7 +612,7 @@
     <div class="register_redirect">
         <p class="register_redirect_count">Already have an account? <span class="register_redirect_link" on:click={go_to_login_form}>Login</span></p>
     </div>
-    <div class="login_divider">
+    <!-- <div class="login_divider">
         <hr/><span>Or Register With</span><hr/>
     </div>
     <div class="social_login">
@@ -625,5 +625,5 @@
         <div class="social_login_link twitter">
             <img src="/images/twitter.png" />
         </div>
-    </div>
+    </div> -->
 </form>

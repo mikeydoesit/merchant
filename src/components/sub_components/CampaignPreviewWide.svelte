@@ -12,8 +12,6 @@
                 filter: `is_active = true && merchant = "${merchant.id}"`,
                 expand: 'merchant'
             })
-
-            console.log(active_result_list.items)
             return active_result_list.items
         } catch (error) {
             console.log(error)

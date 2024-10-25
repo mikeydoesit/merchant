@@ -3,8 +3,8 @@
 	import { quintOut } from 'svelte/easing';
     import { onMount } from 'svelte';
     import { createApi } from 'unsplash-js';
-    import { PUBLIC_POCKETBASE_URL, PUBLIC_UNSPLASH_ACCESS_KEY, PUBLIC_CAMPAIGN_BASE_URL } from '$env/static/public';
-    import { show_active_campaigns, show_draft_campaigns, show_campaign_action, show_campaign_action_main, show_campaign_action_edit, show_campaign_action_preview, show_campaign_action_delete, show_product_name_field, show_product_name_input, show_category_field, updated_product_service_name, show_updated_product_category_list, has_updated_product_category, selected_updated_product_category_to_display, show_category_input, show_original_price_field, show_original_price_input, updated_original_price, show_discount_type_value_field, show_discount_type_value_input, show_product_images_field, show_product_images_input, updated_internal_storage_images, show_edit_stock_images, edit_stock_images, edit_stock_images_array, updated_stock_images_ids, updated_stock_images, discount_type, discount_percentage, updated_discount_type, updated_discount_percentage } from '$lib/store.js'
+    import { PUBLIC_POCKETBASE_URL, PUBLIC_UNSPLASH_ACCESS_KEY } from '$env/static/public';
+    import { show_active_campaigns, show_draft_campaigns, show_campaign_action, show_campaign_action_main, show_campaign_action_edit, show_campaign_action_preview, show_campaign_action_delete, show_product_name_field, show_product_name_input, show_category_field, updated_product_service_name, show_updated_product_category_list, has_updated_product_category, selected_updated_product_category_to_display, show_category_input, show_original_price_field, show_original_price_input, updated_original_price, show_discount_type_value_field, show_discount_type_value_input, show_product_images_field, show_product_images_input, updated_internal_storage_images, show_edit_stock_images, edit_stock_images, edit_stock_images_array, updated_stock_images_ids, updated_stock_images, discount_type, discount_percentage, updated_discount_type, updated_discount_percentage, show_product_desc_field, show_product_desc_input, updated_product_service_desc } from '$lib/store.js'
 
     export let sub_category_list = [];
     export let pb = {}
@@ -14,6 +14,7 @@
     let internal_media = []
     let show_percent_slider = false
     let submitting_product_name = false
+    let submitting_product_desc = false
     let submitting_product_category = false
     let submitting_original_price = false
     let submitting_discount = false
@@ -60,9 +61,9 @@
         show_campaign_action_delete.set(false)
         show_campaign_action_main.set(true) 
     }
-    const go_to_live_view = () => {
-        window.location.assign(PUBLIC_CAMPAIGN_BASE_URL)
-    }
+    // const go_to_live_view = () => {
+    //     window.location.assign(PUBLIC_CAMPAIGN_BASE_URL)
+    // }
 
     // EDIT FORM FIELD FUNCTIONS
     const set_updated_product_service_name = (e) => {
@@ -93,6 +94,8 @@
         show_product_name_input.set(!$show_product_name_input)
 
         // close other fields
+        show_product_desc_field.set(true)
+        show_product_desc_input.set(false)
         show_category_field.set(true)
         show_category_input.set(false)
         show_original_price_field.set(true)
@@ -101,6 +104,43 @@
         show_discount_type_value_input.set(false)
 
     }
+    const set_updated_product_service_desc = (e) => {
+        updated_product_service_desc.set(e.target.value)
+    }
+    const submit_updated_product_service_desc = async () => {
+
+        if(!submitting_product_desc) {
+
+            submitting_product_desc = true
+
+            updated_campaign.set('desc', $updated_product_service_desc)
+
+            try {
+                const record = await pb.collection('campaigns').update(campaign_id, updated_campaign);
+            } catch (error) {
+                console.log(error)
+            } finally {
+                campaign_obj()
+                submitting_product_desc = false
+                toggle_product_desc_field()
+            }
+        }
+
+    }
+    const toggle_product_desc_field = () => {
+        show_product_desc_field.set(!$show_product_desc_field)
+        show_product_desc_input.set(!$show_product_desc_input)
+
+        // close other fields
+        show_product_name_field.set(true)
+        show_product_name_input.set(false)
+        show_category_field.set(true)
+        show_category_input.set(false)
+        show_original_price_field.set(true)
+        show_original_price_input.set(false)
+        show_discount_type_value_field.set(true)
+        show_discount_type_value_input.set(false)
+    }
     const toggle_category_field = () => {
         show_category_field.set(!$show_category_field)
         show_category_input.set(!$show_category_input)
@@ -108,6 +148,8 @@
         // close other fields
         show_product_name_field.set(true)
         show_product_name_input.set(false)
+        show_product_desc_field.set(true)
+        show_product_desc_input.set(false)
         show_original_price_field.set(true)
         show_original_price_input.set(false)
         show_discount_type_value_field.set(true)
@@ -147,6 +189,8 @@
         // close other fields
         show_product_name_field.set(true)
         show_product_name_input.set(false)
+        show_product_desc_field.set(true)
+        show_product_desc_input.set(false)
         show_category_field.set(true)
         show_category_input.set(false)
         show_discount_type_value_field.set(true)
@@ -182,6 +226,8 @@
         // close other fields
         show_product_name_field.set(true)
         show_product_name_input.set(false)
+        show_product_desc_field.set(true)
+        show_product_desc_input.set(false)
         show_category_field.set(true)
         show_category_input.set(false)
         show_original_price_field.set(true)
@@ -221,6 +267,8 @@
         // close other fields
         show_product_name_field.set(true)
         show_product_name_input.set(false)
+        show_product_desc_field.set(true)
+        show_product_desc_input.set(false)
         show_category_field.set(true)
         show_category_input.set(false)
         show_original_price_field.set(true)
@@ -295,7 +343,6 @@
                 const reset = await pb.collection('campaigns').update(campaign_id, images_field_reset);
 
                 const record = await pb.collection('campaigns').update(reset.id, updated_campaign);
-                console.log(record)
             } catch (error) {
                 console.log(error)
                 submitting_images = false
@@ -314,7 +361,6 @@
 
             try {
                 const record = await pb.collection('campaigns').delete(campaign_id);
-                console.log(record)
             } catch (error) {
                 console.log(error)
                 deleting_campaign = false
@@ -403,7 +449,7 @@
     .discount_list_item_content {
         @apply flex flex-row gap-6;
     }
-    .field_wrapper #product_name_input, .field_wrapper #original_price_input {
+    .field_wrapper #product_name_input, .field_wrapper #original_price_input, .field_wrapper #product_desc_input {
         @apply border-2 border-border_grey py-2 px-4 text-sm rounded-md focus:outline-accent_bg placeholder:text-xs;
     }
     .product_category_select_input_btn_wrapper {
@@ -709,8 +755,8 @@
                             </div>
                         {/if}
                         {#if $show_active_campaigns}
-                            <div class="preview_btn link" on:click={go_to_live_view}>
-                                <span>View</span>
+                            <div class="preview_btn link">
+                                <a href={`https://tesomame.com/product/${campaign_id}`} target="_blank">View</a>
                             </div>
                         {/if}
                         <div class="delete_btn link" on:click={toggle_delete_confirm}>
@@ -771,6 +817,56 @@
                                             </div>
                                         {:else}
                                             <div class="save_btn" on:click={submit_updated_product_service_name}>
+                                                <span>Save</span>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            {/if}
+                        </li>
+
+                        <!-- PRODUCT DESC -->
+                        <li class="campaign_list_item">
+                            {#if $show_product_desc_field}
+                                <div class="list_item_content_wrapper" transition:slide={{ delay: 0, duration: 100, easing: quintOut, axis: 'x' }}>
+                                    <div class="list_item_content">
+                                        <h6>Product description</h6>
+                                        <span>{campaign.desc}</span>
+                                    </div>
+                                    <div class="edit_icon" on:click={toggle_product_desc_field}>
+                                        <img src="/images/edit.png" />
+                                    </div>
+                                </div>
+                            {/if}
+                            {#if $show_product_desc_input}
+                                <div class="list_item_form_field_wrapper" transition:slide={{ delay: 0, duration: 100, easing: quintOut, axis: 'x' }}>
+                                    <div class="field_wrapper">
+                                        <label for="product_desc_input">Product description</label>
+                                        <textarea id="product_desc_input" on:input={set_updated_product_service_desc}></textarea>
+                                    </div>
+                                    <div class="btns_wrapper">
+                                        <div class="back_btn" on:click={toggle_product_desc_field}>
+                                            <span>Back</span>
+                                        </div>
+                                        {#if submitting_product_desc}
+                                            <div class="save_btn" on:click={submit_updated_product_service_desc}>
+                                                <div class="loader">
+                                                    <div class="bar1"></div>
+                                                    <div class="bar2"></div>
+                                                    <div class="bar3"></div>
+                                                    <div class="bar4"></div>
+                                                    <div class="bar5"></div>
+                                                    <div class="bar6"></div>
+                                                    <div class="bar7"></div>
+                                                    <div class="bar8"></div>
+                                                    <div class="bar9"></div>
+                                                    <div class="bar10"></div>
+                                                    <div class="bar11"></div>
+                                                    <div class="bar12"></div>
+                                                </div>
+                                            </div>
+                                        {:else}
+                                            <div class="save_btn" on:click={submit_updated_product_service_desc}>
                                                 <span>Save</span>
                                             </div>
                                         {/if}
@@ -1066,7 +1162,7 @@
                                                 </div>
                                             </div>
                                         {:else}
-                                            <div class="upload_btn" on:click={$updated_stock_images.length > 0 || $updated_internal_storage_images.length > 0 ? submit_updated_images : ()=>{console.log('test')}}>
+                                            <div class="upload_btn" on:click={$updated_stock_images.length > 0 || $updated_internal_storage_images.length > 0 ? submit_updated_images : ""}>
                                                 <span>Add images</span>
                                             </div>
                                         {/if}

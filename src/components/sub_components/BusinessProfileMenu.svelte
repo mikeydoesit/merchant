@@ -27,7 +27,6 @@
         show_business_profile_action.set(true)
         show_opening_hours_edit.set(true)
     }
-    console.log(merchant)
 </script>
 <style lang="postcss">
     .business_profile_menu {

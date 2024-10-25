@@ -4,7 +4,7 @@
     import { createApi } from 'unsplash-js';
     import { PUBLIC_UNSPLASH_ACCESS_KEY } from '$env/static/public';
     import SectionTitle from './SectionTitle.svelte'
-    import { product_service_name, show_product_category_list, has_product_category, selected_product_category_to_display, original_price, discount_type, discount_percentage, show_add_campaign_page_one, show_add_campaign, show_campaigns_menu, show_add_campaign_page_two, show_stock_images, stock_images, stock_images_array, show_percent_slider, selected_stock_images, selected_stock_images_ids, selected_internal_storage_images } from '$lib/store';
+    import { product_service_name, product_service_desc, show_product_category_list, has_product_category, selected_product_category_to_display, original_price, discount_type, discount_percentage, show_add_campaign_page_one, show_add_campaign, show_campaigns_menu, show_add_campaign_page_two, show_stock_images, stock_images, stock_images_array, show_percent_slider, selected_stock_images, selected_stock_images_ids, selected_internal_storage_images, campaign_length, show_campaign_length_list, selected_campaign_length_to_display, has_campaign_length } from '$lib/store';
 	import SelectedImageList from './SelectedImageList.svelte';
 
     export let sub_category_list = [];
@@ -12,7 +12,10 @@
     export let merchant_id = '';
     export let merchant_category = '';
 
+    const campaign_length_list = ['Day', '3 days', 'Week', '2 weeks', 'Month']
+
     let show_product_category_error = false
+    let show_campaign_length_error = false
     let uploading_images = false
     let publishing_campaign = false
     const new_campaign = new FormData();
@@ -39,7 +42,6 @@
                         url: item.urls.regular
                     }
                 }))
-                console.log($stock_images_array)
             }
         });
     }
@@ -50,7 +52,6 @@
     }
     const set_selected_internal_storage_images = (e) => {
         selected_internal_storage_images.set(e.target.files)
-        console.log($selected_internal_storage_images)
     }
 
     const append_stock_images_to_form_data = () => {
@@ -75,11 +76,17 @@
     const set_product_service_name = (e) => {
         product_service_name.set(e.target.value)
     }
+    const set_product_service_desc = (e) => {
+        product_service_desc.set(e.target.value)
+    }
     const set_original_price = (e) => {
         original_price.set(e.target.value)
     }
     const toggle_product_category_list = () => {
         show_product_category_list.set(!$show_product_category_list)
+    }
+    const toggle_campaign_length_list = () => {
+        show_campaign_length_list.set(!$show_campaign_length_list)
     }
     const set_product_category = (e) => {
         selected_product_category_to_display.set(e.target.dataset.name)
@@ -101,6 +108,13 @@
         discount_percentage.set(e.target.value)
     }
 
+    const set_campaign_length = (e) => {
+        selected_campaign_length_to_display.set(e.target.dataset.name)
+        has_campaign_length.set(true)
+        show_campaign_length_error = false
+        toggle_campaign_length_list()
+    }
+
 
     const save_campaign_to_drafts = async () => {
             try {
@@ -114,6 +128,8 @@
                 new_campaign.append('sub_category', $selected_product_category_to_display)
                 new_campaign.append('parent_category', merchant_category)
                 new_campaign.append('is_active', false)
+                new_campaign.append('campaign_length', $selected_campaign_length_to_display)
+                new_campaign.append('desc', $product_service_desc)
 
                 const record = await pb.collection('campaigns').create(new_campaign);
 
@@ -135,13 +151,11 @@
         for (let file of $selected_internal_storage_images) {
             new_campaign.append('images', file);
         }
-        console.log($selected_stock_images)
 
         let campaign_id = sessionStorage.getItem('id')
 
         try {
             const record = await pb.collection('campaigns').update(campaign_id, new_campaign);
-            console.log(record)
 
             if(!record.code) {
                 selected_stock_images.set([])
@@ -173,8 +187,11 @@
     .form_item h6 {
         @apply pl-1 mb-4 text-sm font-semibold;
     }
-    .form_item #product_service_name, .form_item #original_price {
+    .form_item #product_service_name, .form_item #original_price, .form_item #product_service_desc {
         @apply border-2 border-border_grey py-3 px-4 rounded-md focus:outline-accent_bg;
+    }
+    .form_item #product_service_desc {
+        @apply resize-none;
     }
     .form_item.next_btn {
         @apply bg-accent_bg py-4 rounded-md text-white font-bold text-lg cursor-pointer flex justify-center items-center;
@@ -203,17 +220,17 @@
     .percent_slider {
         @apply mt-6;
     }
-    .product_category_select_input_btn_wrapper, .location_select_input_btn_wrapper {
+    .product_category_select_input_btn_wrapper, .location_select_input_btn_wrapper, .campaign_length_select_input_btn_wrapper {
         @apply relative;
     }
-    .product_category_select_input_btn, .location_select_input_btn {
+    .product_category_select_input_btn, .location_select_input_btn, .campaign_length_select_input_btn {
         @apply border-2 py-3 px-4 rounded-md;
     }
-    .product_category_list, .location_list {
+    .product_category_list, .location_list, .campaign_length_list {
         @apply absolute top-full mt-2 z-10 bg-main_bg w-full h-40 rounded-md overflow-y-scroll;
         box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
     }
-    .product_category_list_item, .location_list_item {
+    .product_category_list_item, .location_list_item, .campaign_length_list_item {
         @apply py-3 px-4 hover:bg-border_grey_two;
     }
 
@@ -419,6 +436,11 @@
             <input id="original_price" type="number" placeholder="0.00" on:input={set_original_price}/>
         </div>
         <div class="form_item">
+            <label for="product_service_desc">Description</label>
+            <textarea id="product_service_desc" rows="5" on:input={set_product_service_desc}></textarea>
+            <!-- <input id="product_service_desc" type="number" placeholder="0.00" on:input={set_original_price}/> -->
+        </div>
+        <div class="form_item">
             <h6>Discount</h6>
             <div class="discount_select">
                 <div class="discount_type_wrapper">
@@ -461,6 +483,26 @@
                 </div>
             {/if}
         </div>
+        <div class="form_item">
+            <label for="campaign_length">Campaign length </label>
+            <div class="campaign_length_select_input_btn_wrapper">
+                <div class={`campaign_length_select_input_btn ${$show_campaign_length_list ? 'border-accent_bg' : 'border-border_grey'}`} on:click={toggle_campaign_length_list}>
+                    <span class={`${$has_campaign_length ? 'text-black' : 'text-border_grey_four'}`}>{$selected_campaign_length_to_display}</span>
+                </div>
+                {#if $show_campaign_length_list}
+                    <ul class="campaign_length_list" transition:slide={{ delay: 250, duration: 300, easing: quintOut, axis: 'y' }}>
+                        {#each campaign_length_list as list_item}
+                            <li class="campaign_length_list_item" data-name={list_item} on:click={set_campaign_length}>{list_item}</li>
+                        {/each}
+                    </ul>
+                {/if}
+            </div>
+            {#if show_campaign_length_error}
+                <div class="campaign_length_error" transition:slide={{ delay: 50, duration: 150, easing: quintOut, axis: 'y' }}>
+                    <span class="campaign_length_error_text">Looks like you haven't selected a campaign length</span>
+                </div>
+            {/if}
+        </div>
     {/if}
     {#if $show_add_campaign_page_two}
         <div class="image_uploader_wrapper">
@@ -481,7 +523,7 @@
         </div>
     {/if}
     {#if $show_add_campaign_page_one}
-        <div class="form_item next_btn" on:click={save_campaign_to_drafts}>
+        <div class={`form_item next_btn ${($product_service_name != '' && $product_service_desc != '' && $original_price > 0 && $has_product_category && $has_campaign_length && $discount_type != '') ? 'pointer-events-auto cursor-pointer opacity-100' : 'pointer-events-none cursor-not-allowed opacity-60'}`} on:click={save_campaign_to_drafts}>
             <span>Next</span>
         </div>
     {/if}

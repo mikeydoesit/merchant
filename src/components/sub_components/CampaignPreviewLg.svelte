@@ -9,15 +9,47 @@
     export let pb = {}
     const new_campaign = new FormData();
 
-    const edit_campaign = () => {
-        console.log('edit')
-    }
+    
     const publish_campaign =  async (id) => {
 
-        new_campaign.append('is_active', true);
+        
+        // Get campaign_length to calculate expiration date
 
         try {
-            const record = await pb.collection('campaigns').update(id, new_campaign);
+            const get_record = await pb.collection('campaigns').getOne(id);
+
+            let campaign_length = get_record.campaign_length
+            let today = new Date();
+            let campaign_duration
+
+
+            if (campaign_length == 'Day') {
+                campaign_duration = 24 * 60 * 60 * 1000
+
+            } else if(campaign_length == '3 days') {
+                campaign_duration = 72 * 60 * 60 * 1000
+
+            } else if(campaign_length == 'Week') {
+                campaign_duration = 168 * 60 * 60 * 1000
+                
+            } else if(campaign_length == '2 weeks') {
+                campaign_duration = 336 * 60 * 60 * 1000
+
+            } else if(campaign_length == 'Month') {
+                campaign_duration = 730 * 60 * 60 * 1000
+            }
+
+            let expiration_date = new Date(today.getTime() + campaign_duration)
+            let formatted_expiration_date = expiration_date.toISOString().replace('T', ' ')
+
+            new_campaign.append('is_active', true);
+            new_campaign.append('expiration_date', formatted_expiration_date)
+
+            try {
+                const updated_record = await pb.collection('campaigns').update(id, new_campaign);
+            } catch (error) {
+                console.log(error)
+            }
         } catch (error) {
             console.log(error)
         } finally {
@@ -25,6 +57,8 @@
             show_draft_campaigns.set(false)
             show_active_campaigns.set(true)
         }
+
+        
     }
 
     const set_campaign_list = async () => {
@@ -299,9 +333,9 @@
                             <span class="edit_date">Last modified on: {formatDate(campaign.updated)}</span>
                         </div>
                         <div class="card_footer">
-                            <div class="main_action_btn" on:click={$show_active_campaigns ? edit_campaign(campaign.id) : publish_campaign(campaign.id)} data-campaign_id={campaign.id}>
+                            <div class="main_action_btn"  on:click={$show_active_campaigns ? "" : publish_campaign(campaign.id)} data-campaign_id={campaign.id}>
                                 {#if $show_active_campaigns}
-                                    <span>Edit</span>
+                                    <a href={`https://tesomame.com/product/${campaign.id}`} target="_blank">View</a>
                                 {:else if $show_draft_campaigns}
                                     <span>Publish</span>
                                 {/if}

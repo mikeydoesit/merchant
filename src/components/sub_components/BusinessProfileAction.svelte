@@ -103,7 +103,6 @@
 
         try {
             const record_logo = await pb.collection('merchants').update(merchant.id, formData);
-            console.log(record_logo)
         } catch (error) {
             console.log(error)
         } finally {
@@ -114,7 +113,6 @@
         }
 
         setTimeout(() => {
-            console.log('time')
             show_business_profile.set(true)
         }, 2000)
     }
@@ -129,7 +127,6 @@
 
         try {
             const record_business_name = await pb.collection('merchants').update(merchant.id, formData);
-            console.log(record_business_name)
         } catch (error) {
             console.log(error)
         } finally {
@@ -139,7 +136,6 @@
             show_business_profile.set(false)
         }
         setTimeout(() => {
-            console.log('time')
             show_business_profile.set(true)
         }, 2000)
     }
@@ -153,7 +149,6 @@
 
         try {
             const record_business_registration = await pb.collection('merchants').update(merchant.id, formData);
-            console.log(record_business_registration)
         } catch (error) {
             console.log(error)
         } finally {
@@ -177,7 +172,6 @@
 
         try {
             const record_contact_number = await pb.collection('merchants').update(merchant.id, formData);
-            console.log(record_contact_number)
         } catch (error) {
             console.log(error)
         } finally {

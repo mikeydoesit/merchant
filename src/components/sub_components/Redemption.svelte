@@ -33,7 +33,6 @@
                 const record = await pocketbase.collection('merchants').getOne($currentUser.id);
 
                 new_code = record.current_otp
-                console.log(record)
             } catch (error) {
                 console.error(error)
             }
