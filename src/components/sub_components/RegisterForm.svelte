@@ -1,6 +1,7 @@
 <script>
-    import { show_registration_success, show_login_form, show_register_form, show_category_list, show_location_list, selected_category, has_category, selected_location, has_location, selected_category_to_display, sub_categories_array, selected_location_to_display, register_page_one, register_page_two, name, business_name, business_registration_number, email, password, confirmed_password } from '$lib/store.js';
+    import { show_registration_success, show_login_form, show_register_form, show_category_list, show_location_list, selected_category, has_category, selected_location, has_location, selected_category_to_display, sub_categories_array, selected_location_to_display, register_page_one, register_page_two, name, business_name, business_registration_number, email, password, confirmed_password, en_route_to_post_ad } from '$lib/store.js';
     import Categories from '$lib/data/Categories.js';
+    import PrePaymentProductForm from "../sub_components/PrePaymentProductForm.svelte"
     import accra_locations from '$lib/data/Accra_locations.js'
     import { slide, fade } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
@@ -28,6 +29,7 @@
     // let sub_categories_array = [];
 
     const go_to_register_page_two = () => {
+        console.log($en_route_to_post_ad)
         if($name.length < 1) {
             show_name_error = true
         } else {
@@ -38,11 +40,11 @@
         } else {
             show_business_name_error = false
         }
-        if($business_registration_number.length < 1) {
-            show_business_registration_number_error = true
-        } else {
-            show_business_registration_number_error = false
-        }
+        // if($business_registration_number.length < 1) {
+        //     show_business_registration_number_error = true
+        // } else {
+        //     show_business_registration_number_error = false
+        // }
         if($has_location == false) {
             show_location_error = true
         } else {
@@ -58,7 +60,7 @@
         } else {
             show_sub_category_error = false
         }
-        if($has_category && $has_location && $business_registration_number.length >= 1 && $business_name.length >= 1 && $name.length >= 1 && $sub_categories_array.length > 0) {
+        if($has_category && $has_location && $business_name.length >= 1 && $name.length >= 1) {
             register_page_one.set(false)
             register_page_two.set(true)
         }
@@ -430,7 +432,7 @@
         <div class="register_page_one" transition:slide={{ delay: 50, duration: 300, easing: quintOut, axis: 'x' }}>
             <div class="form_item">
                 <label for="business_name">Name</label>
-                <input type="text" id="name" name="name" placeholder="Enter your first and last name" on:input={set_name} />
+                <input type="text" id="name" name="name" placeholder="Enter your first and last name" on:input={set_name} value={$name} />
                 {#if show_name_error}
                     <div class="name_error" transition:slide={{ delay: 50, duration: 150, easing: quintOut, axis: 'y' }}>
                         <span class="name_error_text">Looks like you haven't entered your name</span>
@@ -439,14 +441,14 @@
             </div>
             <div class="form_item">
                 <label for="business_name">Business name</label>
-                <input type="text" id="business_name" name="business_name" placeholder="Enter your business name" on:input={set_business_name} />
+                <input type="text" id="business_name" name="business_name" placeholder="Enter your business name" on:input={set_business_name} value={$business_name}/>
                 {#if show_business_name_error}
                     <div class="business_name_error" transition:slide={{ delay: 50, duration: 150, easing: quintOut, axis: 'y' }}>
                         <span class="business_name_error_text">Looks like you haven't entered a business name</span>
                     </div>
                 {/if}
             </div>
-            <div class="form_item">
+            <!-- <div class="form_item">
                 <label for="business_registration_number">Business registration number</label>
                 <input type="text" id="business_registration_number" name="business_registration_number" placeholder="Enter your registration number" on:input={set_business_registration_number}/>
                 {#if show_business_registration_number_error}
@@ -454,7 +456,7 @@
                         <span class="business_registration_number_error_text">Looks like you haven't entered your registration number</span>
                     </div>
                 {/if}
-            </div>
+            </div> -->
             <div class="form_item">
                 <label for="location">Location</label>
                 <div class="location_select_input_btn_wrapper">
@@ -496,7 +498,7 @@
                 {/if}
             </div>
         </div>
-        {#if sub_categories.length > 0}
+        <!-- {#if sub_categories.length > 0}
         <div class="sub_category_section">
             {#if show_sub_category_error}
                 <h6 class="sub_cat_title_error">No product or service selected.</h6>
@@ -513,14 +515,14 @@
                 {/each}
             </div>
         </div>
-        {/if}
+        {/if} -->
         <div class="form_item next_btn" on:click={go_to_register_page_two}>
             <span>Next</span>
         </div>
     {/if}
     {#if $register_page_two}
     <div class="register_page_two" transition:slide={{ delay: 50, duration: 300, easing: quintOut, axis: 'x' }}>
-        <div class="form_item">
+        <!-- <div class="form_item">
             <label for="email">Email</label>
             <input 
                 on:input={set_email}
@@ -529,14 +531,19 @@
                 id="email" 
                 name="email" 
                 placeholder="Enter your email"
+                value={$email}
             />
             {#if show_email_error}
                 <div class="email_error" transition:slide={{ delay: 50, duration: 150, easing: quintOut, axis: 'y' }}>
                     <span class="email_error_text">Looks like you haven't entered a valid email.</span>
                 </div>
             {/if}
-        </div>
-        <div class="form_item">
+        </div> -->
+        {#if $en_route_to_post_ad}
+            <PrePaymentProductForm />
+        {:else}
+        {/if}
+        <!-- <div class="form_item">
             <label for="password">Password</label>
             <div class="pwd_wrapper" bind:this={password_input_wrapper}>
                 <input 
@@ -584,7 +591,7 @@
                     <span class="confirm_password_error_text">Check the password confirmation. It appears to not be a match.</span>
                 </div>
             {/if}
-        </div>
+        </div> -->
         {#if submitting_registration}
             <div class="form_item submit_btn">
                 <div class="loader">

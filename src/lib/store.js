@@ -16,6 +16,8 @@ export const show_campaign_action_edit = writable(false)
 export const show_campaign_action_preview = writable(false)
 export const show_campaign_action_delete = writable(false)
 
+export const en_route_to_post_ad = writable(false)
+
 // Auth variables
 
 export const register_page_one = writable(true)
@@ -24,7 +26,10 @@ export const register_page_three = writable(false)
 
 export const name = writable('')
 export const business_name = writable('')
+export const business_address = writable('')
+export const contact_number = writable('')
 export const business_registration_number = writable('')
+export const business_website = writable('')
 export const email = writable('')
 export const password = writable('')
 export const confirmed_password = writable('')

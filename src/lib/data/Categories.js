@@ -2,45 +2,62 @@ const Categories = [
     {
         name: 'Beauty & Spas',
         tag: 'beauty_spas',
-        sub_categories: [
+        products: [
             {
-                name: 'Shaving & Grooming',
-                tag: 'shaving_grooming',
+                name:'Bath & Body',
+                tag: 'bath_body',
                 checked: false
             },
             {
-                name: 'Facials',
-                tag: 'facials',
+                name: 'Fragrances',
+                tag: 'fragrances',
                 checked: false
             },
             {
-                name: 'Lip Fillers & Injections',
-                tag: 'lip_fillers_injections',
+                name: 'Hair Beauty',
+                tag: 'hair_beauty',
                 checked: false
             },
             {
-                name: 'Permanent Makeup',
-                tag: 'permanent_makeup',
+                name: 'Make-Up',
+                tag: 'make_up',
                 checked: false
             },
             {
-                name: 'Microdermabrasion',
-                tag: 'microdermabrasion',
+                name: 'Sexual Wellness',
+                tag: 'sexual_wellness',
                 checked: false
             },
             {
-                name: 'Facial Peel',
-                tag: 'facial_peel',
+                name: 'Skincare',
+                tag: 'skincare',
                 checked: false
             },
             {
-                name: 'Facelifts',
-                tag: 'facelifts',
+                name: 'Tools & Accessories',
+                tag: 'tools_accessories',
                 checked: false
             },
             {
-                name: 'Laser Hair Removal',
-                tag: 'laser_hair_removal',
+                name: 'Vitamins & Supplements',
+                tag: 'vitamins',
+                checked: false
+            }
+        ],
+        services: [
+            {
+                name: 'Manicure & Pedicure',
+                tag: 'manicure_pedicure',
+                checked: false
+            },
+            {
+                name: 'Botox & Wrinkle Injections',
+                tag: 'botox',
+                checked: false
+            },
+            {
+                name: 'Spa Treatments',
+                tag: 'spa_treatments',
                 checked: false
             },
             {
@@ -49,278 +66,78 @@ const Categories = [
                 checked: false
             },
             {
-                name: 'Teeth Whitening',
-                tag: 'teeth_whitening',
+                name: 'Allergy Testing',
+                tag: 'allergy_testing',
                 checked: false
             },
             {
-                name: 'Braces',
-                tag: 'braces',
+                name: 'Eye Care',
+                tag: 'eye_care',
                 checked: false
             },
             {
-                name: 'Tattoos',
-                tag: 'tattoos',
+                name: 'Make-Up',
+                tag: 'make_up',
                 checked: false
             },
             {
-                name: 'Tattoo Removal',
-                tag: 'tattoo_removal',
+                name: 'Facials & Skincare',
+                tag: 'facials_skincare',
                 checked: false
             },
             {
-                name: 'Varicose Veins Treatment',
-                tag: 'varicose_veins_treatment',
+                name: 'Weight Loss & Nutrition',
+                tag: 'weight_loss_nutrition',
                 checked: false
             },
             {
-                name: 'Rhinoplasty',
-                tag: 'rhinoplasty',
+                name: 'Yoga',
+                tag: 'yoga',
                 checked: false
             },
             {
-                name: 'Pamper Packages',
-                tag: 'pamper_packages',
+                name: 'Tattoo & Tattoo Removal',
+                tag: 'tattoo',
                 checked: false
             },
             {
-                name: 'Deep Tissue Massage',
-                tag: 'deep_tissue_massage',
+                name: 'Alternative & Herbal Medicine',
+                tag: 'alternative_herbal',
                 checked: false
             },
             {
-                name: 'Full Body Massage',
-                tag: 'full_body_massage',
-                checked: false
-            },
-            {
-                name: 'Sports Massage',
-                tag: 'sports_massage',
-                checked: false
-            },
-            {
-                name: 'Thai Massage',
-                tag: 'thai_massage',
-                checked: false
-            },
-            {
-                name: 'Pregnancy Massage',
-                tag: 'pregnancy_massage',
-                checked: false
-            },
-            {
-                name: 'Foot Massage',
-                tag: 'foot_massage',
-                checked: false
-            },
-            {
-                name: 'Waxing',
-                tag: 'waxing',
-                checked: false
-            },
-            {
-                name: 'Brazilian Wax',
-                tag: 'brazilian_wax',
-                checked: false
-            },
-            {
-                name: 'Bikini Wax',
-                tag: 'bikini_wax',
-                checked: false
-            },
-            {
-                name: 'Upper Lip Hair Removal',
-                tag: 'upper_lip_hair_removal',
-                checked: false
-            },
-            {
-                name: 'Haircut',
+                name: 'Haircut & Other Hair Services',
                 tag: 'haircut',
                 checked: false
             },
             {
-                name: 'Perming',
-                tag: 'perming',
+                name: 'Waxing Hair Removal',
+                tag: 'waxing_hair_removal',
                 checked: false
             },
             {
-                name: 'Hair Washing',
-                tag: 'hair_washing',
+                name: 'Medical Services',
+                tag: 'medical_services',
                 checked: false
             },
             {
-                name: 'Braiding',
-                tag: 'braiding',
+                name: 'Dental Services',
+                tag: 'dental_services',
                 checked: false
             },
             {
-                name: 'Cornrows',
-                tag: 'cornrows',
+                name: 'Massage',
+                tag: 'massage',
                 checked: false
             },
             {
-                name: 'Dreadlocks',
-                tag: 'dreadlocks',
+                name: 'Eyelash & Eyebrow Services',
+                tag: 'eyelash_eyebrow',
                 checked: false
             },
             {
-                name: 'Hair Dye',
-                tag: 'hair_dye',
-                checked: false
-            },
-            {
-                name: 'Day Spas',
-                tag: 'day_spas',
-                checked: false
-            },
-            {
-                name: 'Hotel Spas',
-                tag: 'hotel_spas',
-                checked: false
-            },
-            {
-                name: 'Eyelash Extensions',
-                tag: 'eyelash_extensions',
-                checked: false
-            },
-            {
-                name: 'Eyelash Tinting',
-                tag: 'eyelash_tinting',
-                checked: false
-            },
-            {
-                name: 'Eyebrow Threading & Tint',
-                tag: 'eyebrow_threading_tint',
-                checked: false
-            },
-            {
-                name: 'Eyebrow Tinting',
-                tag: 'eyebrow_tinting',
-                checked: false
-            },
-            {
-                name: 'Eyebrow Waxing',
-                tag: 'eyebrow_waxing',
-                checked: false
-            },
-            {
-                name: 'Eyebrow Threading',
-                tag: 'eyebrow_threading',
-                checked: false
-            },
-            {
-                name: 'Manicure',
-                tag: 'manicure',
-                checked: false
-            },
-            {
-                name: 'Pedicure',
-                tag: 'pedicure',
-                checked: false
-            },
-            {
-                name: 'Nail Designs',
-                tag: 'nail_designs',
-                checked: false
-            },
-            {
-                name: 'Wedding Makeup',
-                tag: 'wedding_makeup',
-                checked: false
-            },
-            {
-                name: 'Makeup Application',
-                tag: 'makeup_application',
-                checked: false
-            },
-            {
-                name: 'Face Make-Up',
-                tag: 'face_make_up',
-                checked: false
-            },
-            {
-                name: 'Eye Make-Up',
-                tag: 'eye_make_up',
-                checked: false
-            },
-            {
-                name: 'Lip Make-Up',
-                tag: 'lip_make_up',
-                checked: false
-            },
-            {
-                name: 'Brushes & Applicators',
-                tag: 'brushes_applicators',
-                checked: false
-            },
-            {
-                name: 'Make-Up Palettes',
-                tag: 'make_up_palettes',
-                checked: false
-            },
-            {
-                name: 'Makeup Bags, Cases & Organisers',
-                tag: 'makeup_bags_cases_organisers',
-                checked: false
-            },
-            {
-                name: 'Mirrors & Tools',
-                tag: 'mirrors_tools',
-                checked: false
-            },
-            {
-                name: 'Make-Up Remover',
-                tag: 'make_up_remover',
-                checked: false
-            },
-            {
-                name: 'Skin Moisturiser',
-                tag: 'skin_moisturiser',
-                checked: false
-            },
-            {
-                name: 'Facial Cleansers',
-                tag: 'facial_cleansers',
-                checked: false
-            },
-            {
-                name: 'Masks',
-                tag: 'masks',
-                checked: false
-            },
-            {
-                name: 'Hair Accessories',
-                tag: 'hair_accessories',
-                checked: false
-            },
-            {
-                name: 'Hair Styling Tools',
-                tag: 'hair_styling_tools',
-                checked: false
-            },
-            {
-                name: 'Brushes & Combs',
-                tag: 'brushes_combs',
-                checked: false
-            },
-            {
-                name: 'Scalp & Hair Treatments',
-                tag: 'scalp_hair_treatments',
-                checked: false
-            },
-            {
-                name: 'Hair Color',
-                tag: 'hair_color',
-                checked: false
-            },
-            {
-                name: 'Hair Styling Products',
-                tag: 'hair_styling_products',
-                checked: false
-            },
-            {
-                name: 'Shampoo & Conditioners',
-                tag: 'shampoo_conditioners',
+                name: 'Laser Hair Removal',
+                tag: 'laser_hair_removal',
                 checked: false
             }
         ]
@@ -328,7 +145,24 @@ const Categories = [
     {
         name: 'Fitness',
         tag: 'fitness',
-        sub_categories: [
+        products: [
+            {
+                name: 'Protein Supplements',
+                tag: 'protein',
+                checked: false
+            },
+            {
+                name: 'Sports Equipment',
+                tag: 'sports_eq',
+                checked: false
+            },
+            {
+                name: 'Exercise Equipment',
+                tag: 'exercise_eq',
+                checked: false
+            }
+        ],
+        services: [
             {
                 name: 'Martial Arts',
                 tag: 'martial_arts',
@@ -370,11 +204,6 @@ const Categories = [
                 checked: false
             },
             {
-                name: 'Sports Equipment',
-                tag: 'sports_equipment',
-                checked: false
-            },
-            {
                 name: 'Gyms',
                 tag: 'gyms',
                 checked: false
@@ -389,12 +218,39 @@ const Categories = [
     {
         name: 'Food & Drink',
         tag: 'food_drink',
-        sub_categories: [
+        products: [
             {
-                name: 'Restaurants',
-                tag: 'restaurants',
+                name: 'Groceries',
+                tag: 'groceries',
                 checked: false
             },
+            {
+                name: 'Beer, Wine & Spirits',
+                tag: 'beer_wine_spirits',
+                checked: false
+            },
+            {
+                name: 'Live Animals',
+                tag: 'live_animals',
+                checked: false
+            },
+            {
+                name: 'Beverages',
+                tag: 'beverages',
+                checked: false
+            },
+            {
+                name: 'Grains',
+                tag: 'grains',
+                checked: false
+            },
+            {
+                name: 'Dairy',
+                tag: 'dairy',
+                checked: false
+            }
+        ],
+        services: [
             {
                 name: 'Indian Restaurants',
                 tag: 'indian_restaurants',
@@ -411,8 +267,8 @@ const Categories = [
                 checked: false
             },
             {
-                name: 'Italian Restaurants',
-                tag: 'italian_restaurants',
+                name: 'Turkish Restaurants',
+                tag: 'turkish_restaurants',
                 checked: false
             },
             {
@@ -433,11 +289,6 @@ const Categories = [
             {
                 name: 'Chopbars',
                 tag: 'chopbars',
-                checked: false
-            },
-            {
-                name: 'French Restaurants',
-                tag: 'french_restaurants',
                 checked: false
             },
             {
@@ -515,60 +366,137 @@ const Categories = [
     {
         name: 'Automotive',
         tag: 'automotive',
-        sub_categories: [
+        products: [
             {
-                name: 'Auto Repair Services',
-                tag: 'auto_repair_services',
+                name: 'Cars',
+                tag: 'cars',
                 checked: false
             },
             {
-                name: 'Oil Change',
-                tag: 'oil_change',
+                name: 'Motorcycles',
+                tag: 'motorcycles',
                 checked: false
             },
             {
-                name: 'Breakdown Cover',
-                tag: 'breakdown_cover',
+                name: 'Car Accessories & Parts',
+                tag: 'car_parts',
                 checked: false
             },
             {
                 name: 'Tyres',
                 tag: 'tyres',
                 checked: false
-            },
+            }
+        ],
+        services: [
             {
-                name: 'Car Body Repair',
-                tag: 'car_body_repair',
+                name: 'Car Servicing & Repairs',
+                tag: 'car_repairs',
                 checked: false
             },
             {
-                name: 'Car Hire',
-                tag: 'car_hire',
+                name: 'Car Wash & Detailing',
+                tag: 'car_Wash',
                 checked: false
             },
             {
-                name: 'Airport Parking',
-                tag: 'airport_parking',
+                name: 'Vehicle Insurance Packages',
+                tag: 'vehicle_insurance',
                 checked: false
             },
             {
-                name: 'Car Cleaning',
-                tag: 'car_cleaning',
+                name: 'Tyre Installations',
+                tag: 'tyre_installations',
                 checked: false
             },
             {
-                name: 'Car Electronics',
-                tag: 'car_electronics',
+                name: 'Car Rentals & Leasing Deals',
+                tag: 'car_rentals',
                 checked: false
             },
             {
-                name: 'Car Safety & Security',
-                tag: 'car_safety_security',
+                name: 'Auto Diagnostic Services',
+                tag: 'auto_diagnostic',
                 checked: false
             },
             {
-                name: 'Replacement Parts',
-                tag: 'replacement_parts',
+                name: 'Burger Restaurants',
+                tag: 'burger_restaurants',
+                checked: false
+            },
+            {
+                name: 'Chopbars',
+                tag: 'chopbars',
+                checked: false
+            },
+            {
+                name: 'Pizza Restaurants',
+                tag: 'pizza_restaurants',
+                checked: false
+            },
+            {
+                name: 'Vegetarian Restaurants',
+                tag: 'vegetarian_restaurants',
+                checked: false
+            },
+            {
+                name: 'Chinese Restaurants',
+                tag: 'chinese_restaurants',
+                checked: false
+            },
+            {
+                name: 'Cafes',
+                tag: 'cafes',
+                checked: false
+            },
+            {
+                name: 'Bakeries',
+                tag: 'bakeries',
+                checked: false
+            },
+            {
+                name: 'Ice Cream',
+                tag: 'ice_cream',
+                checked: false
+            },
+            {
+                name: 'Coffee Shops',
+                tag: 'coffee_shops',
+                checked: false
+            },
+            {
+                name: 'Sports Bars',
+                tag: 'sports_bars',
+                checked: false
+            },
+            {
+                name: 'Bars',
+                tag: 'bars',
+                checked: false
+            },
+            {
+                name: 'Karaoke Bars',
+                tag: 'karaoke_bars',
+                checked: false
+            },
+            {
+                name: 'Wine Tasting',
+                tag: 'wine_tasting',
+                checked: false
+            },
+            {
+                name: 'Distilleries Tours',
+                tag: 'distilleries_tours',
+                checked: false
+            },
+            {
+                name: 'Beer Tasting',
+                tag: 'beer_tasting',
+                checked: false
+            },
+            {
+                name: 'Breweries',
+                tag: 'breweries',
                 checked: false
             }
         ]
@@ -576,25 +504,37 @@ const Categories = [
     {
         name: 'Retail',
         tag: 'retail',
-        sub_categories: [
+        products: [
             {
-                name: 'Clothes',
-                tag: 'clothes',
+                name: 'Bags & Accessories',
+                tag: 'bags',
                 checked: false
             },
             {
-                name: 'Kids',
-                tag: 'kids',
+                name: 'Gift Items & Souvenirs',
+                tag: 'gifts_souvenirs',
                 checked: false
             },
             {
-                name: 'Electronics',
-                tag: 'electronics',
+                name: 'Perfumes & Cosmetics',
+                tag: 'perfumes_cosmetics',
                 checked: false
             },
             {
-                name: 'Furniture',
-                tag: 'furniture',
+                name: 'Stationery & Office Supplies',
+                tag: 'stationery',
+                checked: false
+            },
+            {
+                name: 'Books & Magazines',
+                tag: 'books',
+                checked: false
+            }
+        ],
+        services: [
+            {
+                name: 'Personal Shopping Assistant',
+                tag: 'personal_shopping',
                 checked: false
             }
         ]
@@ -602,55 +542,52 @@ const Categories = [
     {
         name: 'Home Improvement',
         tag: 'home-improvement',
-        sub_categories: [
+        products: [
             {
-                name: 'Painter',
-                tag: 'painter',
+                name: 'Furniture & Decor Items',
+                tag: 'furniture_decor',
                 checked: false
             },
             {
-                name: 'General Contractors',
-                tag: 'general_contractors',
+                name: 'Lighting Fixtures & Fittings',
+                tag: 'lighting',
                 checked: false
             },
             {
-                name: 'P.O.P Contractors',
-                tag: 'pop_contractors',
+                name: 'Paints & Wallpapers',
+                tag: 'paints_wallpapers',
                 checked: false
             },
             {
-                name: 'Carpenters',
-                tag: 'carpenters',
-                checked: false
-            },
-            {
-                name: 'Tilers',
-                tag: 'tilers',
-                checked: false
-            },
-            {
-                name: 'HVAC & Electrical',
-                tag: 'hvac_electrical',
-                checked: false
-            },
-            {
-                name: 'Plumbers',
-                tag: 'plumbers',
-                checked: false
-            },
-            {
-                name: 'Appliance Repair',
-                tag: 'appliance_repair',
-                checked: false
-            },
-            {
-                name: 'Tools',
+                name: 'Tools & Hardware Supplies',
                 tag: 'tools',
                 checked: false
+            }
+        ],
+        services: [
+            {
+                name: 'Plumbing & Electrical Services',
+                tag: 'plumbing_electrical',
+                checked: false
             },
             {
-                name: 'House Cleaning Services',
-                tag: 'house_cleaning_services',
+                name: 'Carpentry & Woodworking Services',
+                tag: 'carpentry',
+                checked: false
+            },
+            {
+                name: 'Tiling Services',
+                tag: 'tiling',
+                checked: false
+            },
+            {
+                name: 'Masonry Services',
+                tag: 'masonry',
+                checked: false
+            },
+            {
+                name: 'Interior Design Consultations',
+                tag: 'interior_design',
                 checked: false
             }
         ]
@@ -658,140 +595,42 @@ const Categories = [
     {
         name: 'Women\'s Fashion',
         tag: 'womens-fashion',
-        sub_categories: [
+        products: [
             {
-                name: 'Sportswear',
-                tag: 'sportswear',
+                name: 'Dresses & Gowns',
+                tag: 'dresses_gowns',
                 checked: false
             },
             {
-                name: 'Dresses',
-                tag: 'dresses',
-                checked: false
-            },
-            {
-                name: 'Trousers',
-                tag: 'trousers',
-                checked: false
-            },
-            {
-                name: 'Jeans',
-                tag: 'jeans',
-                checked: false
-            },
-            {
-                name: 'Shorts',
-                tag: 'shorts',
-                checked: false
-            },
-            {
-                name: 'Skirts',
-                tag: 'skirts',
-                checked: false
-            },
-            {
-                name: 'Swimwear',
-                tag: 'swimwear',
-                checked: false
-            },
-            {
-                name: 'Handbags',
+                name: 'Handbags & Purses',
                 tag: 'handbags',
                 checked: false
             },
             {
-                name: 'Hats',
-                tag: 'hats',
+                name: 'Shoes & Heels',
+                tag: 'shoes_heels',
                 checked: false
             },
             {
-                name: 'Scarves & Wraps',
-                tag: 'scarves_wraps',
-                checked: false
-            },
-            {
-                name: 'Eyewear',
-                tag: 'eyewear',
-                checked: false
-            },
-            {
-                name: 'Wallets',
-                tag: 'wallets',
-                checked: false
-            },
-            {
-                name: 'Belts',
-                tag: 'belts',
-                checked: false
-            },
-            {
-                name: 'Shoes',
-                tag: 'shoes',
-                checked: false
-            },
-            {
-                name: 'Women\'s Slippers',
-                tag: 'womens_slippers',
-                checked: false
-            },
-            {
-                name: 'Women\'s Boots',
-                tag: 'womens_bootx',
-                checked: false
-            },
-            {
-                name: 'Women\'s Sandals',
-                tag: 'womens_sandals',
-                checked: false
-            },
-            {
-                name: 'Sneakers',
-                tag: 'sneakers',
-                checked: false
-            },
-            {
-                name: 'Heels',
-                tag: 'heels',
-                checked: false
-            },
-            {
-                name: 'Loafers',
-                tag: 'loafers',
-                checked: false
-            },
-            {
-                name: 'Socks & Tights',
-                tag: 'socks_tights',
-                checked: false
-            },
-            {
-                name: 'Bras',
-                tag: 'bras',
-                checked: false
-            },
-            {
-                name: 'Lounge & Nightwear',
-                tag: 'lounge_nightwear',
-                checked: false
-            },
-            {
-                name: 'Shapewear',
-                tag: 'shapewear',
-                checked: false
-            },
-            {
-                name: 'Lingerie',
+                name: 'Lingerie & Sleepwear',
                 tag: 'lingerie',
                 checked: false
             },
             {
-                name: 'Panties',
-                tag: 'panties',
+                name: 'Jewellry and Accessories',
+                tag: 'jewellry',
                 checked: false
             },
             {
-                name: 'Maternity Wear',
-                tag: 'maternity_wear',
+                name: 'Scarves & Hats',
+                tag: 'scarves_hats',
+                checked: false
+            }
+        ],
+        services: [
+            {
+                name: 'Styling & Wardrobe Consultations',
+                tag: 'styling_consultation',
                 checked: false
             }
         ]
@@ -799,95 +638,42 @@ const Categories = [
     {
         name: 'Health',
         tag: 'health',
-        sub_categories: [
+        products: [
             {
-                name: 'Eye Care',
-                tag: 'eye_care',
+                name: 'Dresses & Gowns',
+                tag: 'dresses_gowns',
                 checked: false
             },
             {
-                name: 'Nose, Throat & Ear Care',
-                tag: 'nose_throat_ear_care',
+                name: 'Handbags & Purses',
+                tag: 'handbags',
                 checked: false
             },
             {
-                name: 'Foot Care',
-                tag: 'foot_care',
+                name: 'Shoes & Heels',
+                tag: 'shoes_heels',
                 checked: false
             },
             {
-                name: 'Aromatherapy',
-                tag: 'aromatherapy',
+                name: 'Lingerie & Sleepwear',
+                tag: 'lingerie',
                 checked: false
             },
             {
-                name: 'Sexual Wellness',
-                tag: 'sexual_wellness',
+                name: 'Jewellry and Accessories',
+                tag: 'jewellry',
                 checked: false
             },
             {
-                name: 'Feminine Care',
-                tag: 'feminine_care',
+                name: 'Scarves & Hats',
+                tag: 'scarves_hats',
                 checked: false
-            },
+            }
+        ],
+        services: [
             {
-                name: 'Dental Care',
-                tag: 'dental_care',
-                checked: false
-            },
-            {
-                name: 'First Aid',
-                tag: 'first_aid',
-                checked: false
-            },
-            {
-                name: 'Pain Relief',
-                tag: 'pain_relief',
-                checked: false
-            },
-            {
-                name: 'Health Monitors & Tests',
-                tag: 'health_monitors_tests',
-                checked: false
-            },
-            {
-                name: 'Medicine & Treatments',
-                tag: 'medicine_treatments',
-                checked: false
-            },
-            {
-                name: 'Toothbrushes',
-                tag: 'toothbrushes',
-                checked: false
-            },
-            {
-                name: 'Teeth Whitening',
-                tag: 'teeth_whitening',
-                checked: false
-            },
-            {
-                name: 'Mouthwash',
-                tag: 'mouthwash',
-                checked: false
-            },
-            {
-                name: 'Toothpaste',
-                tag: 'toothpaste',
-                checked: false
-            },
-            {
-                name: 'Protein Supplements',
-                tag: 'protein_supplements',
-                checked: false
-            },
-            {
-                name: 'Weight Loss',
-                tag: 'weight_loss',
-                checked: false
-            },
-            {
-                name: 'Contraception',
-                tag: 'contraception',
+                name: 'Styling & Wardrobe Consultations',
+                tag: 'styling_consultation',
                 checked: false
             }
         ]
@@ -895,232 +681,123 @@ const Categories = [
     {
         name: 'Home Appliances',
         tag: 'home-appliances',
-        sub_categories: [
+        products: [
             {
-                name: 'Fans',
-                tag: 'fans',
+                name: 'Refrigerators and freezers',
+                tag: 'fridges_freezers',
                 checked: false
             },
             {
-                name: 'Dehumidifiers',
-                tag: 'dehumidifiers',
+                name: 'Washing machines & dryers',
+                tag: 'washing_machine_dryer',
                 checked: false
             },
             {
-                name: 'Air Conditioners',
-                tag: 'air_conditioners',
+                name: 'Microwaves & Ovens',
+                tag: 'microwaves_ovens',
                 checked: false
             },
             {
-                name: 'Heaters',
-                tag: 'heaters',
+                name: 'Blenders & juicers',
+                tag: 'blenders_juicers',
                 checked: false
             },
             {
-                name: 'Light Bulbs',
-                tag: 'light_bulbs',
+                name: 'Air Conditioners & Fans',
+                tag: 'air_con_fan',
                 checked: false
             },
             {
-                name: 'Flood Lights & Security Lights',
-                tag: 'flood_lights_security_lights',
+                name: 'Vacuum Cleaners',
+                tag: 'vacuum_cleaners',
                 checked: false
             },
             {
-                name: 'Electronics',
-                tag: 'electronics',
-                checked: false
-            },
-            {
-                name: 'Kitchen Appliances',
-                tag: 'kitchen_appliances',
+                name: 'Coffee makers',
+                tag: 'coffee_makers',
                 checked: false
             }
+        ],
+        services: [
         ]
     },
     {
         name: 'Men\'s Fashion',
         tag: 'mens-fashion',
-        sub_categories: [
+        products: [
             {
-                name: 'Sportswear',
-                tag: 'sportswear',
+                name: 'Suits & Formal Wear',
+                tag: 'suits_formal_wear',
                 checked: false
             },
             {
-                name: 'Socks',
-                tag: 'socks',
+                name: 'Casual Clothing & Shoes',
+                tag: 'casual_clothing_shoes',
                 checked: false
             },
             {
-                name: 'Trousers',
-                tag: 'trousers',
+                name: 'Belts & Wallets',
+                tag: 'belts_wallets',
                 checked: false
             },
             {
-                name: 'T-Shirts & Vests',
-                tag: 'tshirts_vests',
+                name: 'Ties & Cufflinks',
+                tag: 'ties_cufflinks',
                 checked: false
             },
             {
-                name: 'Coats & Jackets',
-                tag: 'coats_jackets',
+                name: 'Sportswear & Gym Outfits',
+                tag: 'sportswear_gym',
                 checked: false
             },
             {
-                name: 'Shorts',
-                tag: 'shorts',
+                name: 'Watches & Accessories',
+                tag: 'watches_acc',
                 checked: false
-            },
+            }
+        ],
+        services: [
             {
-                name: 'Polo Shirts',
-                tag: 'polo_shirts',
+                name: 'Tailoring & Alterations',
+                tag: 'tailoring_alterations',
                 checked: false
-            },
-            {
-                name: 'Shirts',
-                tag: 'shirts',
-                checked: false
-            },
-            {
-                name: 'Swimwear',
-                tag: 'swimwear',
-                checked: false
-            },
-            {
-                name: 'Suits',
-                tag: 'suits',
-                checked: false
-            },
-            {
-                name: 'Jeans',
-                tag: 'jeans',
-                checked: false
-            },
-            {
-                name: 'Underwear',
-                tag: 'underwear',
-                checked: false
-            },
-            {
-                name: 'Pyjamas',
-                tag: 'pyjamas',
-                checked: false
-            },
-            {
-                name: 'Hats',
-                tag: 'hats',
-                checked: false
-            },
-            {
-                name: 'Gloves',
-                tag: 'gloves',
-                checked: false
-            },
-            {
-                name: 'Eyewear',
-                tag: 'eyewear',
-                checked: false
-            },
-            {
-                name: 'Bags',
-                tag: 'bags',
-                checked: false
-            },
-            {
-                name: 'Wallets',
-                tag: 'wallets',
-                checked: false
-            },
-            {
-                name: 'Belts',
-                tag: 'belts',
-                checked: false
-            },
-            {
-                name: 'Men\'s Slippers',
-                tag: 'mens_slippers',
-                checked: false
-            },
-            {
-                name: 'Men\'s Boots',
-                tag: 'mens_boots',
-                checked: false
-            },
-            {
-                name: 'Men\'s Sandals',
-                tag: 'mens_sandals',
-                checked: false
-            },
-            {
-                name: 'Sneakers',
-                tag: 'sneakers',
-                checked: false
-            },
-            {
-                name: 'Dress Shoes',
-                tag: 'dress_shoes',
-                checked: false
-            },
-            {
-                name: 'Loafers',
-                tag: 'loafers',
-                checked: false
-            },
+            }
         ]
     },
     {
         name: 'Jewellery & Watches',
         tag: 'jewellery_watches',
-        sub_categories: [
+        products: [
             {
-                name: 'Fashion Jewellery',
-                tag: 'fashion_jewellery',
+                name: 'Gold & Silver Jewelry',
+                tag: 'gold_silver',
                 checked: false
             },
             {
-                name: 'Watches',
-                tag: 'watches',
+                name: 'Fashion Jewelry',
+                tag: 'fashion_jewelry',
                 checked: false
             },
             {
-                name: 'Men\'s Jewellery',
-                tag: 'mens_jewellery',
+                name: 'Engagement Rings & Wedding Bands',
+                tag: 'engagement_wedding_rings',
                 checked: false
             },
             {
-                name: 'Diamond Jewellery',
-                tag: 'diamond_jewellery',
+                name: 'Bracelets & Bangles',
+                tag: 'bracelets_bangles',
                 checked: false
             },
             {
-                name: 'Pearl Jewellery',
-                tag: 'pearl_jewellery',
+                name: 'Luxury & Smartwatches',
+                tag: 'luxury_smartwatches',
                 checked: false
-            },
+            }
+        ],
+        services: [
             {
-                name: 'Rings',
-                tag: 'rings',
-                checked: false
-            },
-            {
-                name: 'Bracelets',
-                tag: 'bracelets',
-                checked: false
-            },
-            {
-                name: 'Necklaces',
-                tag: 'necklaces',
-                checked: false
-            },
-            {
-                name: 'Earrings',
-                tag: 'earrings',
-                checked: false
-            },
-            {
-                name: 'Jewellery Boxes',
-                tag: 'jewellery_boxes',
+                name: 'Custom Jewelry Design & Engraving',
+                tag: 'custom_jewelry_engraving',
                 checked: false
             }
         ]
@@ -1128,143 +805,143 @@ const Categories = [
     {
         name: 'Electronics',
         tag: 'electronics',
-        sub_categories: [
+        products: [
             {
-                name: 'Phones',
-                tag: 'phones',
+                name: 'Smartphones & Tablets',
+                tag: 'smartphones_tablets',
                 checked: false
             },
             {
-                name: 'Tablets',
-                tag: 'tablets',
+                name: 'Laptops & Desktops',
+                tag: 'laptops_desktops',
                 checked: false
             },
             {
-                name: 'Laptops & Computers',
-                tag: 'laptops_computers',
+                name: 'TVs & Home Entertainment Systems',
+                tag: 'tvs_home_entertainment',
                 checked: false
             },
             {
-                name: 'Software',
-                tag: 'software',
+                name: 'Gaming Consoles & Accessories',
+                tag: 'gaming_consoles_acc',
                 checked: false
             },
             {
-                name: 'MP3 & Portable Audio',
-                tag: 'mp3_portable_audio',
+                name: 'Headphones & Bluetooth Speakers',
+                tag: 'headphones_bluetooth_speakers',
                 checked: false
             },
             {
-                name: 'CCTV',
-                tag: 'cctv',
+                name: 'Smart Home Devices',
+                tag: 'smart_home_devices',
                 checked: false
             },
             {
-                name: 'TV & Home Cinema',
-                tag: 'tv_home_cinema',
+                name: 'Cameras & Drones',
+                tag: 'cameras_drones',
+                checked: false
+            }
+        ],
+        services: [
+            {
+                name: 'Device Repairs',
+                tag: 'device_repairs',
                 checked: false
             },
             {
-                name: 'Phone Accessories',
-                tag: 'phone_accessories',
-                checked: false
-            },
-            {
-                name: 'Wearable Technology',
-                tag: 'wearable_technology',
-                checked: false
-            },
-            {
-                name: 'Video Games',
-                tag: 'video_games',
-                checked: false
-            },
-            {
-                name: 'Musical Instruments',
-                tag: 'musical_instruments',
-                checked: false
-            },
-            {
-                name: 'Printers',
-                tag: 'printers',
-                checked: false
-            },
-        ]
-    },
-    {
-        name: 'Grocery',
-        tag: 'grocery',
-        sub_categories: [
-            {
-                name: 'Food',
-                tag: 'food',
-                checked: false
-            },
-            {
-                name: 'Alcohol',
-                tag: 'alcohol',
-                checked: false
-            },
-            {
-                name: 'Drinks',
-                tag: 'drinks',
-                checked: false
-            },
-            {
-                name: 'Laundry',
-                tag: 'laundry',
-                checked: false
-            },
-            {
-                name: 'Cleaning Products',
-                tag: 'cleaning_products',
+                name: 'Software Installations',
+                tag: 'software_installations',
                 checked: false
             }
         ]
     },
     {
+        name: 'Grocery',
+        tag: 'grocery',
+        products: [
+            {
+                name: 'Fresh Fruits & Vegetables',
+                tag: 'fresh_fruit_veg',
+                checked: false
+            },
+            {
+                name: 'Meat, Fish & Poultry',
+                tag: 'meat_fish_poultry',
+                checked: false
+            },
+            {
+                name: 'Dairy Products & Eggs',
+                tag: 'dairy_eggs',
+                checked: false
+            },
+            {
+                name: 'Beverages & Snacks',
+                tag: 'beverages_snacks',
+                checked: false
+            },
+            {
+                name: 'Baking & Cooking Ingredients',
+                tag: 'baking_cooking_ingredients',
+                checked: false
+            },
+            {
+                name: 'Organic & Health Foods',
+                tag: 'organic_health_foods',
+                checked: false
+            },
+            {
+                name: 'Household Cleaning Supplies',
+                tag: 'household_cleaning_supplies',
+                checked: false
+            }
+        ],
+        services: [
+        ]
+    },
+    {
         name: 'Sports & Outdoors',
         tag: 'sports_outdoors',
-        sub_categories: [
+        products: [
             {
-                name: 'Women\'s Sportswear',
-                tag: 'womens_sportswear',
+                name: 'Gym Equipment & Accessories',
+                tag: 'gym_equipment_acc',
                 checked: false
             },
             {
-                name: 'Women\'s Sports Shoes',
-                tag: 'womens_sports_shoes',
+                name: 'Sportswear & Footwear',
+                tag: 'sportswear_footwear',
                 checked: false
             },
             {
-                name: 'Men\'s Sportswear',
-                tag: 'mens_sportswear',
+                name: 'Camping & Hiking Gear',
+                tag: 'camping_hiking_gear',
                 checked: false
             },
             {
-                name: 'Men\'s Sports Shoes',
-                tag: 'mens_sports_shoes',
+                name: 'Bicycles & Scooters',
+                tag: 'bicycles_scooters',
                 checked: false
             },
             {
-                name: 'Exercise Equipment',
-                tag: 'exercise_equipment',
+                name: 'Fishing & Hunting Supplies',
+                tag: 'fishing_hunting_supplies',
                 checked: false
             },
             {
-                name: 'Camping & Hiking',
-                tag: 'camping_hiking',
+                name: 'Swimming & Diving Gear',
+                tag: 'swimming_diving_gear',
+                checked: false
+            }
+        ],
+        services: [
+            {
+                name: 'Personal Training Sessions',
+                tag: 'personal_training_sessions',
                 checked: false
             },
-        
             {
-                name: 'Cycling',
-                tag: 'cycling',
-                checked: false
-            },
-            {
-                name: 'Golf',
-                tag: 'golf',
+                name: 'Outdoor Adventure Guides',
+                tag: 'outdoor_adventure_guides',
                 checked: false
             }
         ]
@@ -1272,45 +949,15 @@ const Categories = [
     {
         name: 'Toys',
         tag: 'toys',
-        sub_categories: [ 
+        products: [
             {
-                name: 'Swing Sets & Playsets',
-                tag: 'swing_sets_playsets',
+                name: 'Educational Toys',
+                tag: 'educational_toys',
                 checked: false
             },
             {
-                name: 'Pool & Water Fun',
-                tag: 'pool_water_fun',
-                checked: false
-            },
-            {
-                name: 'Sandboxes & Beach Toys',
-                tag: 'sandboxes_beach_toys',
-                checked: false
-            },
-            {
-                name: 'Electronic Toys',
-                tag: 'electronic_toys',
-                checked: false
-            },
-            {
-                name: 'Educational & STEM Toys',
-                tag: 'educational_stem_toys',
-                checked: false
-            },
-            {
-                name: 'Games & Puzzles',
-                tag: 'games_puzzles',
-                checked: false
-            },
-            {
-                name: 'Bikes',
-                tag: 'bikes',
-                checked: false
-            },
-            {
-                name: 'Building Blocks',
-                tag: 'building_blocks',
+                name: 'Puzzles & Board Games',
+                tag: 'puzzles_board_games',
                 checked: false
             },
             {
@@ -1319,54 +966,63 @@ const Categories = [
                 checked: false
             },
             {
-                name: 'Arts & Crafts',
-                tag: 'arts_crafts',
+                name: 'Remote-Controlled Cars & Drones',
+                tag: 'rc_cars_drones',
                 checked: false
             },
             {
-                name: 'Kids Books',
-                tag: 'kids_books',
+                name: 'Outdoor Playsets',
+                tag: 'outdoor_playsets',
                 checked: false
             },
             {
-                name: 'Toddler & Baby',
-                tag: 'toddler_baby',
+                name: 'Stuffed Animals',
+                tag: 'stuffed_animals',
                 checked: false
             }
+        ],
+        services: [
         ]
     },
     {
         name: 'Baby & Kids',
         tag: 'baby_kids',
-        sub_categories: [
+        products: [
             {
-                name: 'Toddler & Kids Fashion',
-                tag: 'toddler_kids_fashion',
+                name: 'Clothing & Shoes',
+                tag: 'clothing_shoes',
                 checked: false
             },
             {
-                name: 'Baby\'s Fashion',
-                tag: 'babys_fashion',
+                name: 'Diapers & Baby Wipes',
+                tag: 'diapers_baby_wipes',
                 checked: false
             },
             {
-                name: 'Nappies',
-                tag: 'nappies',
+                name: 'Strollers & Car Seats',
+                tag: 'strollers_car_seats',
                 checked: false
             },
             {
-                name: 'Pushchairs',
-                tag: 'pushchairs',
+                name: 'Baby Formula & Food',
+                tag: 'baby_formula_food',
                 checked: false
             },
             {
-                name: 'Bath & Potty',
-                tag: 'bath_potty',
+                name: 'Toys & Learning Kits',
+                tag: 'toys_learning_kits',
                 checked: false
             },
             {
-                name: 'Car Seats',
-                tag: 'car_seats',
+                name: 'Baby Skincare Products',
+                tag: 'baby_skincare_products',
+                checked: false
+            }
+        ],
+        services: [
+            {
+                name: 'Baby Photography Sessions',
+                tag: 'baby_photography_sessions',
                 checked: false
             }
         ]
@@ -1374,20 +1030,27 @@ const Categories = [
     {
         name: 'Entertainment',
         tag: 'entertainment',
-        sub_categories: [
+        products: [
             {
-                name: 'Party Supplies',
-                tag: 'party_supplies',
+                name: 'Streaming Service Subscriptions',
+                tag: 'streaming_service_subscriptions',
                 checked: false
             },
             {
-                name: 'Video Games',
-                tag: 'video_games',
+                name: 'Gaming Subscriptions',
+                tag: 'gaming_subscriptions',
+                checked: false
+            }
+        ],
+        services: [
+            {
+                name: 'Movie & Theatre Tickets',
+                tag: 'movie_theatre_tickets',
                 checked: false
             },
             {
-                name: 'Books',
-                tag: 'books',
+                name: 'Concert & Event Passes',
+                tag: 'concert_event_passes',
                 checked: false
             }
         ]
@@ -1395,30 +1058,27 @@ const Categories = [
     {
         name: 'Hotels',
         tag: 'hotels',
-        sub_categories: [
+        products: [
+        ],
+        services: [
             {
-                name: 'City Breaks',
-                tag: 'city_breaks',
+                name: 'Staycation Deals',
+                tag: 'staycation_deals',
                 checked: false
             },
             {
-                name: 'Romantic Getaways',
-                tag: 'romantic_getaways',
+                name: 'Honeymoon Packages',
+                tag: 'honeymoon_packages',
                 checked: false
             },
             {
-                name: 'Beach Vacations',
-                tag: 'beach_vacations',
+                name: 'Weekend Getaway Discounts',
+                tag: 'weekend_getaway_discounts',
                 checked: false
             },
             {
-                name: 'Spa Retreats',
-                tag: 'spa_retreats',
-                checked: false
-            },
-            {
-                name: 'Family Holidays',
-                tag: 'family_holidays',
+                name: 'Conference & Meeting Room Rentals',
+                tag: 'conference_meeting_room_rentals',
                 checked: false
             }
         ]
@@ -1426,45 +1086,37 @@ const Categories = [
     {
         name: 'Tours & Excursions',
         tag: 'tours_excursions',
-        sub_categories: [
+        products: [
+        ],
+        services: [
             {
-                name: 'Greater Accra',
-                tag: 'greater_accra',
+                name: 'City Sightseeing Tours',
+                tag: 'city_sightseeing_tours',
                 checked: false
             },
             {
-                name: 'Ashanti Region',
-                tag: 'ashanti_region',
+                name: 'Safari & Wildlife Tours',
+                tag: 'safari_wildlife_tours',
                 checked: false
             },
             {
-                name: 'Central Region',
-                tag: 'central_region',
+                name: 'Cultural & Historical Tours',
+                tag: 'cultural_historical_tours',
                 checked: false
             },
             {
-                name: 'Bono East Region',
-                tag: 'bono_east_region',
+                name: 'Boat Cruises',
+                tag: 'boat_cruises',
                 checked: false
             },
             {
-                name: 'Savannah Region',
-                tag: 'savannah_region',
+                name: 'Hiking & Adventure Tours',
+                tag: 'hiking_adventure_tours',
                 checked: false
             },
             {
-                name: 'Western Region',
-                tag: 'western_region',
-                checked: false
-            },
-            {
-                name: 'Volta Region',
-                tag: 'volta_region',
-                checked: false
-            },
-            {
-                name: 'Upper East Region',
-                tag: 'upper_east_region',
+                name: 'Photography tours',
+                tag: 'photography_tours',
                 checked: false
             }
         ]
@@ -1472,45 +1124,27 @@ const Categories = [
     {
         name: 'Flights',
         tag: 'flights',
-        sub_categories: [
+        products: [
+        ],
+        services: [
             {
-                name: 'Domestic',
-                tag: 'domestic',
+                name: 'Domestic & International Flight Deals',
+                tag: 'domestic_international_flight_deals',
                 checked: false
             },
             {
-                name: 'West Africa',
-                tag: 'west_africa',
+                name: 'Business Class Upgrades',
+                tag: 'business_class_upgrades',
                 checked: false
             },
             {
-                name: 'Africa & Middle East',
-                tag: 'africa_middle_east',
+                name: 'Group Travel Discounts',
+                tag: 'group_travel_discounts',
                 checked: false
             },
             {
-                name: 'Europe',
-                tag: 'europe',
-                checked: false
-            },
-            {
-                name: 'Caribbean & Mexico',
-                tag: 'caribbean_mexico',
-                checked: false
-            },
-            {
-                name: 'Latin & South America',
-                tag: 'latin_south_america',
-                checked: false
-            },
-            {
-                name: 'North America',
-                tag: 'north_america',
-                checked: false
-            },
-            {
-                name: 'Asia & Pacific',
-                tag: 'asia_pacific',
+                name: 'Travel Insurance Packages',
+                tag: 'travel_insurance_packages',
                 checked: false
             }
         ]

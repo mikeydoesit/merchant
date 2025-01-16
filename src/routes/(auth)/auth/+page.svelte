@@ -3,7 +3,7 @@
 	import { fade, slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import '../../../styles/global.css'
-    import { show_login_form, show_register_form, show_password_reset_form, show_registration_success, email } from '$lib/store.js'
+    import { show_login_form, show_register_form, show_password_reset_form, show_registration_success, email, en_route_to_post_ad } from '$lib/store.js'
     import GenericHeading from '../../../components/sub_components/GenericHeading.svelte';
 	import AuthGreeting from '../../../components/sub_components/AuthGreeting.svelte';
 	import LoginForm from '../../../components/sub_components/LoginForm.svelte';
@@ -62,12 +62,12 @@
     {#if $show_register_form}
         <div class="register_form_wrapper" transition:slide={{ delay: 250, duration: 300, easing: quintOut, axis: 'x' }}>
             <GenericHeading 
-                page_title={'Register'}
+                page_title={$en_route_to_post_ad ? '' : 'Register'}
                 back_btn={false}
             />
             <AuthGreeting
-                title={'Welcome'}
-                subtitle={'First, let\'s create your account.'}
+                title={$en_route_to_post_ad ? '' : 'Welcome'}
+                subtitle={$en_route_to_post_ad ? '' : 'First, let\'s create your account.'}
             />
             <RegisterForm 
                 pb={pocketbase}
